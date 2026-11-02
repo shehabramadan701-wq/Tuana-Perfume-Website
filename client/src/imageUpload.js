@@ -2,7 +2,7 @@
 // then sends it to the server. Returns the photo link.
 import { api, IS_DEMO } from './api';
 
-function resize(file, max = 900) {
+function resize(file, max = 900, type = 'image/webp') {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = () => {
@@ -11,7 +11,7 @@ function resize(file, max = 900) {
       canvas.width = Math.round(img.width * scale);
       canvas.height = Math.round(img.height * scale);
       canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-      resolve(canvas.toDataURL('image/webp', 0.88));
+      resolve(canvas.toDataURL(type, 0.85));
     };
     img.onerror = () => reject(new Error('Please choose an image file'));
     img.src = URL.createObjectURL(file);
@@ -19,7 +19,8 @@ function resize(file, max = 900) {
 }
 
 export async function uploadImage(file) {
-  const data = await resize(file, IS_DEMO ? 500 : 900);
+  // online preview keeps photos inside the browser, so they are made small (JPG)
+  const data = IS_DEMO ? await resize(file, 500, 'image/jpeg') : await resize(file, 900);
   if (IS_DEMO) return data; // online preview: keep the photo inside the browser
   const { url } = await api('/uploads', { method: 'POST', body: { data } });
   return url;

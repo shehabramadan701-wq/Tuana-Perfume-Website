@@ -80,9 +80,36 @@ function load(key, fallback) {
   return fallback();
 }
 function save(key, list) {
-  try { localStorage.setItem('tuana_demo_' + key, JSON.stringify(list)); } catch {}
+  try {
+    localStorage.setItem('tuana_demo_' + key, JSON.stringify(list));
+  } catch {
+    // the browser refused (storage full, or private mode) -> tell the user instead of losing it silently
+    throw new Error('Could not save in this browser (storage is full or blocked) / لم يتم الحفظ: مساحة المتصفح ممتلئة أو محظورة');
+  }
 }
-const loadOrders = () => load('orders2', sampleOrders);
+
+// Products: an older version saved them under 'products' (without photos).
+// If found, bring them back and add the new photos to the sample products.
+function loadProducts() {
+  const current = load('products2', () => null);
+  if (current) return current;
+  const old = load('products', () => null);
+  if (old) {
+    const restored = old.map((p) => ({ ...p, image_url: p.image_url || sampleProducts.find((s) => s.id === p.id)?.image_url || '' }));
+    save('products2', restored);
+    return restored;
+  }
+  return sampleProducts;
+}
+
+// Orders: same idea (older key 'orders')
+function loadOrders() {
+  const current = load('orders2', () => null);
+  if (current) return current;
+  const old = load('orders', () => null);
+  if (old) { save('orders2', old); return old; }
+  return sampleOrders();
+}
 const saveOrders = (list) => save('orders2', list);
 const nextId = (list) => Math.max(0, ...list.map((x) => x.id)) + 1;
 
@@ -135,7 +162,7 @@ export async function mockApi(path, options = {}) {
 
   // ----- products -----
   if (route.startsWith('/products')) {
-    const products = load('products2', () => sampleProducts);
+    const products = loadProducts();
     if (method === 'GET') return [...products].reverse();
     if (method === 'DELETE') { allowed('products.delete'); save('products2', products.filter((p) => p.id !== id)); return {}; }
     if (!body.name_ar || !body.name_en || !body.category || !(Number(body.price) > 0)) throw new Error('Name, category and price are required');
@@ -148,7 +175,7 @@ export async function mockApi(path, options = {}) {
   // ----- categories -----
   if (route.startsWith('/categories')) {
     const categories = load('categories', () => sampleCategories);
-    const products = load('products2', () => sampleProducts);
+    const products = loadProducts();
     const count = (slug) => products.filter((p) => p.category === slug).length;
     if (method === 'GET') return categories.map((c) => ({ ...c, products_count: count(c.slug) }));
     if (method === 'POST') {
@@ -231,7 +258,7 @@ export async function mockApi(path, options = {}) {
 
   if (route === '/orders/checkout') {
     const orders = loadOrders();
-    const products = load('products2', () => sampleProducts);
+    const products = loadProducts();
     const lines = body.items.map((i) => ({ p: products.find((p) => p.id === i.id), q: i.quantity })).filter((l) => l.p);
     const order = {
       id: nextId(orders),

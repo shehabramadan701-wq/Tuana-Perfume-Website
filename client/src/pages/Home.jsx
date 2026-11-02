@@ -63,9 +63,10 @@ export default function Home() {
               <HeroBottle size={300} />
             </div>
           </div>
+          {/* the name of the perfume in the hero photo (change it if you change hero.jpg) */}
           <div className="hero-badge">
-            <strong>Oud</strong>
-            <span>Reale</span>
+            <strong>Notte</strong>
+            <span>d'Oriente</span>
           </div>
         </div>
       </section>
