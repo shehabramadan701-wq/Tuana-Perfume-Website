@@ -1,8 +1,9 @@
 // ===== Dashboard frame: gold sidebar + the current page =====
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, NavLink, Navigate, Outlet, useNavigate } from 'react-router-dom';
 import { useLang } from '../../i18n/LanguageContext';
-import { getUser, can, logout } from '../../auth';
+import { getUser, saveUser, can, logout } from '../../auth';
+import { api } from '../../api';
 import '../../styles/admin.css';
 
 // The sidebar links. "permission" = who can see the link (see server/permissions.js)
@@ -18,7 +19,15 @@ export default function AdminLayout() {
   const { t, lang, toggleLang } = useLang();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
-  const user = getUser();
+  const [user, setUser] = useState(getUser());
+
+  // get fresh permissions from the server every time the dashboard opens
+  useEffect(() => {
+    if (!user) return;
+    api('/auth/me')
+      .then((fresh) => { saveUser(fresh); setUser(fresh); })
+      .catch(() => {});
+  }, []);
 
   if (!user) return <Navigate to="/admin/login" replace />;
 

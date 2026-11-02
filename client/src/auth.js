@@ -15,6 +15,11 @@ export function saveLogin(token, user) {
   localStorage.setItem('tuana_user', JSON.stringify(user));
 }
 
+// update the saved user (e.g. fresh permissions from the server)
+export function saveUser(user) {
+  localStorage.setItem('tuana_user', JSON.stringify(user));
+}
+
 export function logout() {
   localStorage.removeItem('tuana_token');
   localStorage.removeItem('tuana_user');

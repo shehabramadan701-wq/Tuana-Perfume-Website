@@ -197,6 +197,12 @@ export async function mockApi(path, options = {}) {
   }
 
   // ----- login + users -----
+  if (route === '/auth/me') {
+    const user = load('users', () => sampleUsers).find((u) => u.email === getUser()?.email);
+    if (!user) throw new Error('Please log in again');
+    const { password, ...info } = user;
+    return { ...info, permissions: permissions[user.role] };
+  }
   if (route === '/auth/login') {
     const user = load('users', () => sampleUsers).find((u) => u.email === body.email && u.password === body.password);
     if (!user) throw new Error('Wrong email or password');

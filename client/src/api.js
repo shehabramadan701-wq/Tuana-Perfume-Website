@@ -20,7 +20,7 @@ export async function api(path, options = {}) {
   });
 
   // login expired -> back to the login page
-  if (res.status === 401 && !path.startsWith('/auth')) {
+  if (res.status === 401 && path !== '/auth/login') {
     logout();
     window.location.reload();
   }
