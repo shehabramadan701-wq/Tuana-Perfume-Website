@@ -9,7 +9,7 @@ import { getUser } from '../auth';
 
 // same lists as server/permissions.js
 const permissions = {
-  admin: ['sales.view', 'products.add', 'products.edit', 'products.delete', 'categories.add', 'categories.delete', 'users.manage'],
+  admin: ['sales.view', 'orders.delivery', 'products.add', 'products.edit', 'products.delete', 'categories.add', 'categories.delete', 'users.manage'],
   staff: ['products.add', 'products.delete', 'categories.add'],
 };
 
@@ -59,6 +59,7 @@ function sampleOrders() {
   return rows.map(([customer_name, phone, status, card_brand, card_last4, days, items, total], i) => ({
     id: i + 1, customer_name, phone, email: '', city: '', status, card_brand, card_last4, items, total,
     currency: 'EGP', created_at: stamp(days),
+    delivery_status: { 7: 'delivered', 8: 'delivered', 9: 'delivered', 10: 'delivered', 3: 'shipped', 5: 'shipped', 2: 'preparing' }[i + 1] || 'new',
   }));
 }
 
@@ -73,8 +74,8 @@ function load(key, fallback) {
 function save(key, list) {
   try { localStorage.setItem('tuana_demo_' + key, JSON.stringify(list)); } catch {}
 }
-const loadOrders = () => load('orders', sampleOrders);
-const saveOrders = (list) => save('orders', list);
+const loadOrders = () => load('orders2', sampleOrders);
+const saveOrders = (list) => save('orders2', list);
 const nextId = (list) => Math.max(0, ...list.map((x) => x.id)) + 1;
 
 function allowed(permission) {
@@ -87,6 +88,7 @@ function filterOrders(query) {
     .filter((o) => !q.from || o.created_at.slice(0, 10) >= q.from)
     .filter((o) => !q.to || o.created_at.slice(0, 10) <= q.to)
     .filter((o) => !q.status || o.status === q.status)
+    .filter((o) => !q.delivery || (o.delivery_status || 'new') === q.delivery)
     .filter((o) => !q.search || [o.customer_name, o.phone, o.email, String(o.id)].join(' ').toLowerCase().includes(q.search.toLowerCase()))
     .sort((a, b) => b.created_at.localeCompare(a.created_at) || b.id - a.id);
 }
@@ -106,8 +108,8 @@ function summary(query) {
 
 // Excel opens this CSV file directly (the real site makes a true .xlsx)
 function exportFile(query) {
-  const head = ['Order #', 'Date', 'Customer', 'Phone', 'Items', 'Total', 'Currency', 'Status', 'Card'];
-  const lines = filterOrders(query).map((o) => [o.id, o.created_at, o.customer_name, o.phone, o.items, o.total, o.currency, o.status, o.card_last4 ? `${o.card_brand} **** ${o.card_last4}` : '']);
+  const head = ['Order #', 'Date', 'Customer', 'Phone', 'Items', 'Total', 'Currency', 'Payment', 'Shipping', 'Card'];
+  const lines = filterOrders(query).map((o) => [o.id, o.created_at, o.customer_name, o.phone, o.items, o.total, o.currency, o.status, o.delivery_status || 'new', o.card_last4 ? `${o.card_brand} **** ${o.card_last4}` : '']);
   const csv = [head, ...lines].map((r) => r.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\r\n');
   return new Response('﻿' + csv, { headers: { 'Content-Type': 'text/csv;charset=utf-8' } });
 }
@@ -209,6 +211,12 @@ export async function mockApi(path, options = {}) {
     return { status: 'paid' };
   }
 
+  const delivery = route.match(/^\/admin\/orders\/(\d+)\/delivery$/);
+  if (delivery) {
+    allowed('orders.delivery');
+    saveOrders(loadOrders().map((o) => (o.id === Number(delivery[1]) ? { ...o, delivery_status: body.delivery_status } : o)));
+    return {};
+  }
   if (route === '/admin/summary') { allowed('sales.view'); return summary(query); }
   if (route === '/admin/export') { allowed('sales.view'); return exportFile(query); }
 

@@ -30,7 +30,7 @@ export default function Intro({ onDone }) {
         <div className="intro-ring ring2" />
 
         <div className="intro-bottle">
-          <Bottle color="#6B4226" size={190} />
+          <Bottle color="var(--hero-bottle)" size={190} />
         </div>
         <div className="intro-shadow" />
       </div>

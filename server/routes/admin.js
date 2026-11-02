@@ -16,6 +16,7 @@ function buildFilters(query) {
   if (query.from)   { where.push('DATE(o.created_at) >= ?'); params.push(query.from); }
   if (query.to)     { where.push('DATE(o.created_at) <= ?'); params.push(query.to); }
   if (query.status) { where.push('o.status = ?');            params.push(query.status); }
+  if (query.delivery) { where.push('o.delivery_status = ?'); params.push(query.delivery); }
   if (query.search) {
     where.push('(o.customer_name LIKE ? OR o.email LIKE ? OR o.phone LIKE ? OR o.id = ?)');
     const s = `%${query.search}%`;
@@ -71,6 +72,21 @@ router.get('/summary', async (req, res) => {
   }
 });
 
+// ---------- PUT /api/admin/orders/5/delivery  { delivery_status: 'shipped' } ----------
+const deliveryStatuses = ['new', 'preparing', 'shipped', 'delivered', 'cancelled'];
+
+router.put('/orders/:id/delivery', can('orders.delivery'), async (req, res) => {
+  const { delivery_status } = req.body;
+  if (!deliveryStatuses.includes(delivery_status)) return res.status(400).json({ message: 'Unknown status' });
+  try {
+    await db.query('UPDATE orders SET delivery_status = ? WHERE id = ?', [delivery_status, req.params.id]);
+    res.json({ message: 'Saved' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Could not save' });
+  }
+});
+
 // ---------- GET /api/admin/export  (Excel file) ----------
 router.get('/export', async (req, res) => {
   try {
@@ -88,7 +104,8 @@ router.get('/export', async (req, res) => {
       { header: 'Items',    key: 'items',         width: 40 },
       { header: 'Total',    key: 'total',         width: 12 },
       { header: 'Currency', key: 'currency',      width: 10 },
-      { header: 'Status',   key: 'status',        width: 10 },
+      { header: 'Payment',  key: 'status',        width: 10 },
+      { header: 'Shipping', key: 'delivery_status', width: 12 },
       { header: 'Card',     key: 'card',          width: 18 },
     ];
 

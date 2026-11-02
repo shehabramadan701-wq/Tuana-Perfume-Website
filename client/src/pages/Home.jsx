@@ -7,6 +7,7 @@ import ProductCard from '../components/ProductCard';
 import Bottle from '../components/Bottle';
 import Ornament from '../components/Ornament';
 import Footer from '../components/Footer';
+import PalettePicker from '../components/PalettePicker';
 import { useLang } from '../i18n/LanguageContext';
 import useConfig from '../context/useConfig';
 import { api, scrollToId } from '../api';
@@ -59,7 +60,7 @@ export default function Home() {
         <div className="hero-visual">
           <div className="arch">
             <div className="arch-inner">
-              <div className="float"><Bottle color="#6B4226" size={300} /></div>
+              <div className="float"><Bottle color="var(--hero-bottle)" size={300} /></div>
             </div>
           </div>
           <div className="hero-badge">
@@ -146,6 +147,7 @@ export default function Home() {
       </section>
 
       <Footer />
+      <PalettePicker />
     </>
   );
 }

@@ -157,6 +157,14 @@ const translations = {
     'us.you': 'أنت',
     'us.adminHint': 'المدير: كل الصلاحيات',
     'us.staffHint': 'الموظف: يضيف ويحذف المنتجات ويضيف الأقسام',
+    'ad.payment': 'الدفع',
+    'ad.delivery': 'الشحن',
+    'ad.allDelivery': 'كل حالات الشحن',
+    'dl.new': 'جديد',
+    'dl.preparing': 'قيد التجهيز',
+    'dl.shipped': 'تم الشحن',
+    'dl.delivered': 'تم التوصيل',
+    'dl.cancelled': 'ملغي',
   },
 
   en: {
@@ -313,6 +321,14 @@ const translations = {
     'us.you': 'you',
     'us.adminHint': 'Admin: full access',
     'us.staffHint': 'Staff: add & delete products, add categories',
+    'ad.payment': 'Payment',
+    'ad.delivery': 'Shipping',
+    'ad.allDelivery': 'All shipping',
+    'dl.new': 'New',
+    'dl.preparing': 'Preparing',
+    'dl.shipped': 'Shipped',
+    'dl.delivered': 'Delivered',
+    'dl.cancelled': 'Cancelled',
   },
 };
 

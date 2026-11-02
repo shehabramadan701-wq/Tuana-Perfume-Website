@@ -21,6 +21,17 @@
                radial-gradient(circle at 90% 40%, rgba(184, 137, 59, 0.14), transparent 38%),
                radial-gradient(circle at 30% 90%, rgba(227, 200, 138, 0.22), transparent 42%);
   --gold-btn: linear-gradient(135deg, #9C7128 0%, #C99A45 40%, #B08435 60%, #9C7128 100%);
+  /* Parts that change with the color palette (see styles/palettes.css) */
+  --hero-bottle: #6B4226;
+  --hero-bg: var(--gold-mix);
+  --story-bg: var(--gold-mix);
+  --band: var(--gold-shine);
+  --band-text: var(--oud);
+  --band-icon: #FFFFFF;
+  --footer-bg: linear-gradient(180deg, #FFFFFF 0%, #F6E7BE 60%, #E9CF8E 100%);
+  --footer-text: var(--oud);
+  --footer-logo: var(--oud);
+
   --gold-shine: linear-gradient(90deg, #C99A45 0%, #F1DDA6 25%, #D4AA5A 50%, #F6E7BC 75%, #C99A45 100%);
   --radius: 14px;
   --shadow: 0 18px 40px -22px rgba(74, 46, 30, 0.45);
@@ -215,7 +226,7 @@ html[lang='ar'] .eyebrow { font-family: 'Amiri', serif; letter-spacing: 0; font-
   min-height: calc(100vh - 80px);
   display: grid; grid-template-columns: 1.1fr 1fr; align-items: center; gap: 3rem;
   padding: 3rem 7vw;
-  background: var(--gold-glow), var(--gold-mix);
+  background: var(--gold-glow), var(--hero-bg);
   position: relative; overflow: hidden;
 }
 .hero::before { content: ''; position: absolute; inset: 0; background-image: var(--pattern); opacity: 0.35; pointer-events: none; }
@@ -259,9 +270,9 @@ html[lang='ar'] .eyebrow { font-family: 'Amiri', serif; letter-spacing: 0; font-
 /* =========================================================
    FEATURES STRIP
    ========================================================= */
-.features { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--gold-shine); color: var(--oud); border-block: 1px solid var(--gold); }
+.features { display: grid; grid-template-columns: repeat(4, 1fr); background: var(--band); color: var(--band-text); border-block: 1px solid var(--gold); }
 .feature { padding: 1.3rem; text-align: center; border-inline-end: 1px solid rgba(255, 255, 255, 0.5); }
-.feature-icon { color: #FFFFFF; text-shadow: 0 1px 3px rgba(74, 46, 30, 0.4); margin-inline-end: 0.5rem; }
+.feature-icon { color: var(--band-icon); text-shadow: 0 1px 3px rgba(74, 46, 30, 0.4); margin-inline-end: 0.5rem; }
 
 /* =========================================================
    SECTIONS
@@ -296,7 +307,7 @@ html[lang='ar'] .eyebrow { font-family: 'Amiri', serif; letter-spacing: 0; font-
 .product-bottom strong { font-size: 1.15rem; color: var(--oud); }
 
 /* Story */
-.story { display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem; align-items: center; background: var(--gold-glow), var(--gold-mix); position: relative; }
+.story { display: grid; grid-template-columns: 1fr 1.1fr; gap: 4rem; align-items: center; background: var(--gold-glow), var(--story-bg); position: relative; }
 .story-visual { display: flex; justify-content: center; }
 .arch-small { width: min(400px, 80vw); aspect-ratio: 4 / 5; }
 .story-bottles { display: flex; align-items: flex-end; gap: 0.2rem; }
@@ -313,8 +324,8 @@ blockquote p { font-style: italic; }
 .stars { color: var(--gold); letter-spacing: 3px; margin-top: 0.8rem; }
 
 /* Footer */
-.footer { background: linear-gradient(180deg, #FFFFFF 0%, #F6E7BE 60%, #E9CF8E 100%); color: var(--oud); border-top: 1px solid var(--sand-dark); text-align: center; padding: 3.5rem 1rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-.footer .logo-en { color: var(--oud); }
+.footer { background: var(--footer-bg); color: var(--footer-text); border-top: 1px solid var(--sand-dark); text-align: center; padding: 3.5rem 1rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+.footer .logo-en { color: var(--footer-logo); }
 .footer-contact { display: flex; gap: 2rem; flex-wrap: wrap; justify-content: center; direction: ltr; }
 .footer-contact a:hover { color: var(--gold); }
 .footer small { opacity: 0.6; }

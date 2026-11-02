@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useLang } from '../../i18n/LanguageContext';
 import useConfig from '../../context/useConfig';
 import { api, money, IS_DEMO } from '../../api';
+import { can } from '../../auth';
 
 // "2026-11-02" for a date that is N days ago
 function daysAgo(n) {
@@ -11,7 +12,11 @@ function daysAgo(n) {
   return d.toLocaleDateString('en-CA');
 }
 
-const emptyFilters = { from: '', to: '', status: '', search: '' };
+const emptyFilters = { from: '', to: '', status: '', delivery: '', search: '' };
+
+// shipping steps of an order (same list as server/routes/admin.js)
+const deliverySteps = ['new', 'preparing', 'shipped', 'delivered', 'cancelled'];
+const deliveryIcons = { new: '●', preparing: '⧗', shipped: '🚚', delivered: '✓', cancelled: '✕' };
 
 export default function Sales() {
   const { t, lang } = useLang();
@@ -23,15 +28,28 @@ export default function Sales() {
   const m = (v) => money(v, currency, lang);
   const query = '?' + new URLSearchParams(filters).toString();
 
+  async function load() {
+    setLoading(true);
+    try { setData(await api('/admin/summary' + query)); } catch {}
+    setLoading(false);
+  }
+
   // reload every time a filter changes
   useEffect(() => {
-    const timer = setTimeout(async () => {
-      setLoading(true);
-      try { setData(await api('/admin/summary' + query)); } catch {}
-      setLoading(false);
-    }, 300);
+    const timer = setTimeout(load, 300);
     return () => clearTimeout(timer);
   }, [filters]);
+
+  // change the shipping status of one order
+  async function setDelivery(order, delivery_status) {
+    setData({ ...data, orders: data.orders.map((o) => (o.id === order.id ? { ...o, delivery_status } : o)) });
+    try {
+      await api(`/admin/orders/${order.id}/delivery`, { method: 'PUT', body: { delivery_status } });
+    } catch (err) {
+      alert(err.message);
+      load();
+    }
+  }
 
   const change = (e) => setFilters({ ...filters, [e.target.name]: e.target.value });
   const preset = (days) => setFilters({ ...filters, from: days === null ? '' : daysAgo(days), to: days === null ? '' : daysAgo(0) });
@@ -70,6 +88,12 @@ export default function Sales() {
             <option value="failed">{t('st.failed')}</option>
           </select>
         </label>
+        <label>{t('ad.delivery')}
+          <select className="input" name="delivery" value={filters.delivery} onChange={change}>
+            <option value="">{t('ad.allDelivery')}</option>
+            {deliverySteps.map((d) => <option key={d} value={d}>{t('dl.' + d)}</option>)}
+          </select>
+        </label>
         <input className="input search" name="search" placeholder={t('ad.search')} value={filters.search} onChange={change} />
         <button className="btn btn-small excel-btn" onClick={exportExcel}>⬇ {t('ad.excel')}</button>
       </div>
@@ -80,6 +104,21 @@ export default function Sales() {
         <div className="stat"><span className="stat-icon">✓</span><span>{t('ad.paid')}</span><strong>{stats.paidCount || 0}</strong></div>
         <div className="stat"><span className="stat-icon">≈</span><span>{t('ad.avg')}</span><strong>{m(stats.average)}</strong></div>
         <div className="stat"><span className="stat-icon">…</span><span>{t('ad.pending')}</span><strong>{stats.pendingCount || 0}</strong></div>
+      </div>
+
+      {/* ---------- Shipping summary (paid orders) — click to filter ---------- */}
+      <div className="delivery-strip">
+        {deliverySteps.map((d) => (
+          <button
+            key={d}
+            className={`delivery-pill ${d} ${filters.delivery === d ? 'active' : ''}`}
+            onClick={() => setFilters({ ...filters, delivery: filters.delivery === d ? '' : d })}
+          >
+            <span className="pill-icon">{deliveryIcons[d]}</span>
+            <span>{t('dl.' + d)}</span>
+            <strong>{orders.filter((o) => o.status === 'paid' && (o.delivery_status || 'new') === d).length}</strong>
+          </button>
+        ))}
       </div>
 
       {/* ---------- Chart ---------- */}
@@ -111,7 +150,8 @@ export default function Sales() {
                 <th>{t('ad.items')}</th>
                 <th>{t('ad.total')}</th>
                 <th>{t('ad.card')}</th>
-                <th>{t('ad.status')}</th>
+                <th>{t('ad.payment')}</th>
+                <th>{t('ad.delivery')}</th>
               </tr>
             </thead>
             <tbody>
@@ -124,6 +164,19 @@ export default function Sales() {
                   <td className="nowrap"><strong>{m(o.total)}</strong></td>
                   <td className="nowrap" dir="ltr">{o.card_last4 ? `${o.card_brand} •••• ${o.card_last4}` : '—'}</td>
                   <td><span className={`badge ${o.status}`}>{t('st.' + o.status)}</span></td>
+                  <td>
+                    {o.status !== 'paid' ? <span className="muted">—</span> : can('orders.delivery') ? (
+                      <select
+                        className={`delivery-select ${o.delivery_status || 'new'}`}
+                        value={o.delivery_status || 'new'}
+                        onChange={(e) => setDelivery(o, e.target.value)}
+                      >
+                        {deliverySteps.map((d) => <option key={d} value={d}>{deliveryIcons[d]} {t('dl.' + d)}</option>)}
+                      </select>
+                    ) : (
+                      <span className={`delivery-select ${o.delivery_status || 'new'}`}>{t('dl.' + (o.delivery_status || 'new'))}</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>

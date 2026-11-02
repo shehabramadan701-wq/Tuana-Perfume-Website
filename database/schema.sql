@@ -55,7 +55,8 @@ CREATE TABLE IF NOT EXISTS orders (
   address        VARCHAR(255),
   total          DECIMAL(10,2) NOT NULL,
   currency       VARCHAR(5) DEFAULT 'EGP',
-  status         VARCHAR(20) DEFAULT 'pending',  -- pending | paid | failed
+  status         VARCHAR(20) DEFAULT 'pending',  -- payment:  pending | paid | failed
+  delivery_status VARCHAR(20) DEFAULT 'new',     -- shipping: new | preparing | shipped | delivered | cancelled
   payment_ref    VARCHAR(120),                   -- payment id from the gateway
   card_brand     VARCHAR(20),                    -- visa | mastercard
   card_last4     VARCHAR(4),
@@ -117,6 +118,11 @@ INSERT INTO orders (customer_name, email, phone, city, address, total, status, p
 ('Karim Adel',   'karim@mail.com',  '01558889990', 'Giza',      'Sheikh Zayed',  1650, 'paid',    'demo_8', 'mastercard', '9876', DATE_SUB(NOW(), INTERVAL 10 DAY), DATE_SUB(NOW(), INTERVAL 10 DAY)),
 ('منى إبراهيم',  'mona@mail.com',   '01009990001', 'الإسكندرية','ميامي',         750,  'paid',    'demo_9', 'visa',       '1111', DATE_SUB(NOW(), INTERVAL 13 DAY), DATE_SUB(NOW(), INTERVAL 13 DAY)),
 ('Youssef Samy', 'youssef@mail.com','01110001112', 'Cairo',     'Maadi',         2450, 'paid',    'demo_10','visa',       '3333', DATE_SUB(NOW(), INTERVAL 20 DAY), DATE_SUB(NOW(), INTERVAL 20 DAY));
+
+-- shipping status of the demo orders
+UPDATE orders SET delivery_status = 'delivered' WHERE id IN (7, 8, 9, 10);
+UPDATE orders SET delivery_status = 'shipped'   WHERE id IN (3, 5);
+UPDATE orders SET delivery_status = 'preparing' WHERE id IN (2);
 
 INSERT INTO order_items (order_id, product_id, product_name, price, quantity) VALUES
 (1, 1, 'Oud Reale', 2450, 2),

@@ -1,5 +1,5 @@
 // A perfume bottle drawn with SVG (used when a product has no photo).
-// <Bottle color="#5B3A1E" size={160} />
+// <Bottle color="#5B3A1E" size={160} />   (color can also be a CSS variable: "var(--hero-bottle)")
 import { useId } from 'react';
 
 export default function Bottle({ color = '#8B5A2B', size = 160 }) {
@@ -9,8 +9,8 @@ export default function Bottle({ color = '#8B5A2B', size = 160 }) {
     <svg viewBox="0 0 120 220" width={size * 0.55} height={size} className="bottle-svg">
       <defs>
         <linearGradient id={`glass${id}`} x1="0" x2="1">
-          <stop offset="0" stopColor={color} stopOpacity="0.75" />
-          <stop offset="0.5" stopColor={color} />
+          <stop offset="0" style={{ stopColor: color }} stopOpacity="0.75" />
+          <stop offset="0.5" style={{ stopColor: color }} />
           <stop offset="1" stopColor="#000" stopOpacity="0.55" />
         </linearGradient>
         <linearGradient id={`gold${id}`} x1="0" x2="1">
@@ -26,7 +26,7 @@ export default function Bottle({ color = '#8B5A2B', size = 160 }) {
       <rect x="40" y="58" width="40" height="7" rx="2" fill={`url(#gold${id})`} />
 
       {/* neck */}
-      <rect x="50" y="65" width="20" height="16" fill={color} opacity="0.85" />
+      <rect x="50" y="65" width="20" height="16" style={{ fill: color }} opacity="0.85" />
 
       {/* body with an Arabic arch top */}
       <path

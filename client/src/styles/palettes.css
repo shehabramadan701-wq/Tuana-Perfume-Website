@@ -1,0 +1,93 @@
+/* =========================================================
+   Color palettes for the website (gold + one more color)
+   "ivory" is the default in main.css. Pick one in src/palettes.js
+   ========================================================= */
+
+/* ---------- Emerald & Gold (زمردي) ---------- */
+[data-palette='emerald'] {
+  --oud: #1F4D45;
+  --text: #22312D;
+  --hero-bottle: #1F5A50;
+  --hero-bg: linear-gradient(135deg, #FFFFFF 0%, #EEF5F1 35%, #F5E6BF 62%, #FFFFFF 85%, #E6F0EB 100%);
+  --story-bg: linear-gradient(160deg, #E9F2EE 0%, #FFFFFF 50%, #F7EBCB 100%);
+  --band: linear-gradient(90deg, #143832, #1F5A50 50%, #143832);
+  --band-text: #F1DDA6;
+  --band-icon: #D4AA5A;
+  --footer-bg: linear-gradient(180deg, #1F4D45, #102C27);
+  --footer-text: #EFE3C4;
+  --footer-logo: #F1DDA6;
+}
+
+/* ---------- Navy & Gold (كحلي) ---------- */
+[data-palette='navy'] {
+  --oud: #1C2541;
+  --text: #232A3D;
+  --hero-bottle: #24345E;
+  --hero-bg: linear-gradient(135deg, #FFFFFF 0%, #EEF1F8 35%, #F5E6BF 62%, #FFFFFF 85%, #E7EBF5 100%);
+  --story-bg: linear-gradient(160deg, #EAEEF7 0%, #FFFFFF 50%, #F7EBCB 100%);
+  --band: linear-gradient(90deg, #131A30, #24345E 50%, #131A30);
+  --band-text: #F1DDA6;
+  --band-icon: #D4AA5A;
+  --footer-bg: linear-gradient(180deg, #1C2541, #0F1527);
+  --footer-text: #E9E2CE;
+  --footer-logo: #F1DDA6;
+}
+
+/* ---------- Burgundy & Gold (عنابي) ---------- */
+[data-palette='burgundy'] {
+  --oud: #6B1E2E;
+  --text: #3A2227;
+  --hero-bottle: #7A2236;
+  --hero-bg: linear-gradient(135deg, #FFFFFF 0%, #F9EEF0 35%, #F5E6BF 62%, #FFFFFF 85%, #F6E6E9 100%);
+  --story-bg: linear-gradient(160deg, #F6E8EB 0%, #FFFFFF 50%, #F7EBCB 100%);
+  --band: linear-gradient(90deg, #4E1421, #7A2236 50%, #4E1421);
+  --band-text: #F1DDA6;
+  --band-icon: #D4AA5A;
+  --footer-bg: linear-gradient(180deg, #6B1E2E, #3F0F1A);
+  --footer-text: #F2E2D4;
+  --footer-logo: #F1DDA6;
+}
+
+/* ---------- Onyx & Gold (أسود) ---------- */
+[data-palette='onyx'] {
+  --oud: #161616;
+  --text: #262626;
+  --hero-bottle: #1E1E1E;
+  --hero-bg: linear-gradient(135deg, #FFFFFF 0%, #F3F2EF 35%, #F5E6BF 62%, #FFFFFF 85%, #EFEDE8 100%);
+  --story-bg: linear-gradient(160deg, #EFEEEA 0%, #FFFFFF 50%, #F7EBCB 100%);
+  --band: linear-gradient(90deg, #0B0B0B, #2A2A2A 50%, #0B0B0B);
+  --band-text: #F1DDA6;
+  --band-icon: #D4AA5A;
+  --footer-bg: linear-gradient(180deg, #1A1A1A, #050505);
+  --footer-text: #E8E0CC;
+  --footer-logo: #F1DDA6;
+}
+
+/* ---------- Rose & Gold (وردي) ---------- */
+[data-palette='rose'] {
+  --oud: #7A3F4A;
+  --text: #4A2E33;
+  --hero-bottle: #B9727F;
+  --hero-bg: linear-gradient(135deg, #FFFFFF 0%, #FBEFEF 35%, #F5E6BF 62%, #FFFFFF 85%, #F9E8E8 100%);
+  --story-bg: linear-gradient(160deg, #FAEBEC 0%, #FFFFFF 50%, #F7EBCB 100%);
+  --band: linear-gradient(90deg, #E4BFC2, #F5DEDB 50%, #E4BFC2);
+  --band-text: #6A2F3A;
+  --band-icon: #B8893B;
+  --footer-bg: linear-gradient(180deg, #FFFFFF 0%, #F6DFE0 60%, #E9C3C6 100%);
+  --footer-text: #6A2F3A;
+  --footer-logo: #7A3F4A;
+}
+
+/* ---------- The color picker (online preview only) ---------- */
+.palette-picker { position: fixed; bottom: 1.2rem; inset-inline-start: 1.2rem; z-index: 80; display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+.palette-toggle {
+  display: flex; align-items: center; gap: 0.5rem;
+  border: 1px solid var(--gold); background: #FFFFFF; color: var(--oud);
+  border-radius: 999px; padding: 0.5em 1.1em; font-size: 0.95rem;
+  box-shadow: 0 10px 25px -12px rgba(0, 0, 0, 0.35);
+}
+.palette-list { background: #FFFFFF; border: 1px solid var(--sand-dark); border-radius: 16px; padding: 0.6rem; box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.4); display: flex; flex-direction: column; gap: 0.2rem; }
+.palette-list button { display: flex; align-items: center; gap: 0.7rem; border: none; background: transparent; padding: 0.45em 0.7em; border-radius: 10px; color: var(--text); font-size: 0.95rem; text-align: start; }
+.palette-list button:hover, .palette-list button.active { background: var(--sand); }
+.palette-list button.active { font-weight: bold; }
+.swatch { width: 30px; height: 30px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 0 1px var(--sand-dark); flex-shrink: 0; }
