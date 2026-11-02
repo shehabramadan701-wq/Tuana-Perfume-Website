@@ -78,6 +78,78 @@
   --footer-logo: #7A3F4A;
 }
 
+/* =========================================================
+   ---------- Royal Burgundy & Gold (عنابي ملكي) ----------
+   Less white, more burgundy: burgundy navbar, champagne/blush
+   backgrounds, a dark burgundy story section and a fine
+   mashrabiya (diamond lattice) pattern instead of the stars.
+   The previous design is still available as 'burgundy'.
+   ========================================================= */
+[data-palette='royal'] {
+  --oud: #5E1526;
+  --text: #3A1F25;
+  --muted: #8C6A63;
+  --sand: #F5E6DC;
+  --sand-dark: #E5CBB5;
+  --white: #FFFAF5;
+  --hero-bottle: #7A1F35;
+  --hero-bg: linear-gradient(135deg, #F6E4DC 0%, #F1D9C6 35%, #EACB98 65%, #F3DDD2 100%);
+  --story-bg: linear-gradient(135deg, #4A0F1E 0%, #7A1F35 55%, #5A1526 100%);
+  --band: linear-gradient(90deg, #4E1421, #7A2236 50%, #4E1421);
+  --band-text: #F1DDA6;
+  --band-icon: #D4AA5A;
+  --footer-bg: linear-gradient(180deg, #5E1526, #350B15);
+  --footer-text: #F0DCCF;
+  --footer-logo: #F1DDA6;
+  --gold-mix-soft: linear-gradient(180deg, #FBF1EA 0%, #F6E6D8 50%, #FBF1EA 100%);
+  /* mashrabiya: thin gold diamonds with a small dot */
+  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48' viewBox='0 0 48 48'%3E%3Cpath d='M24 0 L48 24 L24 48 L0 24 Z' fill='none' stroke='%23B8893B' stroke-width='0.8' opacity='0.45'/%3E%3Ccircle cx='24' cy='24' r='1.6' fill='%23B8893B' opacity='0.45'/%3E%3C/svg%3E");
+}
+
+/* page background: warm blush-champagne instead of white */
+[data-palette='royal'] body {
+  background:
+    radial-gradient(circle at 10% 15%, rgba(122, 31, 53, 0.08), transparent 40%),
+    radial-gradient(circle at 90% 60%, rgba(212, 170, 90, 0.18), transparent 40%),
+    #FBF1EA;
+  background-attachment: fixed;
+}
+
+/* burgundy navbar with gold */
+[data-palette='royal'] .navbar { background: linear-gradient(90deg, rgba(74, 15, 30, 0.97), rgba(110, 28, 48, 0.97) 50%, rgba(74, 15, 30, 0.97)); border-bottom: 1px solid #B8893B; }
+[data-palette='royal'] .navbar .logo-en { color: #F6E7BC; }
+[data-palette='royal'] .navbar .logo-ar { color: #D4AA5A; }
+[data-palette='royal'] .nav-links a { color: #F3E3D3; }
+[data-palette='royal'] .nav-links a:hover { color: #F1DDA6; }
+[data-palette='royal'] .navbar .lang-btn { color: #F1DDA6; border-color: #D4AA5A; }
+[data-palette='royal'] .navbar .lang-btn:hover { background: #D4AA5A; color: #4A0F1E; }
+
+/* hero */
+[data-palette='royal'] .hero::before { opacity: 0.55; }
+[data-palette='royal'] .arch-inner { background: radial-gradient(circle at 50% 35%, #FFF8F1 25%, #EFD6C2 95%); }
+[data-palette='royal'] .hero-badge { background: #FFF8F1; border-color: #E5CBB5; }
+[data-palette='royal'] .btn-outline { background: rgba(255, 250, 245, 0.7); }
+
+/* cards */
+[data-palette='royal'] .product-card,
+[data-palette='royal'] blockquote { background: #FFFAF5; border-color: #EAD3C0; }
+[data-palette='royal'] .product-image { background: radial-gradient(circle at 50% 35%, #FFF8F1 30%, #F0D9C4 100%); }
+[data-palette='royal'] .tabs button:not(.active):not(:hover) { background: rgba(255, 250, 245, 0.6); }
+
+/* story section: dark burgundy with gold */
+[data-palette='royal'] .story { color: #EBD6CC; }
+[data-palette='royal'] .story h2 { color: #F1DDA6; }
+[data-palette='royal'] .story-text p,
+[data-palette='royal'] .story-numbers span { color: #E3CBC0; }
+[data-palette='royal'] .story .eyebrow,
+[data-palette='royal'] .story-numbers strong { color: #D4AA5A; }
+[data-palette='royal'] .story::before { content: ''; position: absolute; inset: 0; background-image: var(--pattern); opacity: 0.25; pointer-events: none; }
+[data-palette='royal'] .story > * { position: relative; }
+
+/* intro animation + other pages */
+[data-palette='royal'] .intro { background: radial-gradient(circle at 50% 45%, #FFF8F1 0%, #F6E2D6 45%, #EBCB9C 100%); }
+[data-palette='royal'] .drawer { background: var(--gold-mix-soft); }
+
 /* ---------- The color picker (online preview only) ---------- */
 .palette-picker { position: fixed; bottom: 1.2rem; inset-inline-start: 1.2rem; z-index: 80; display: flex; flex-direction: column; align-items: flex-start; gap: 0.6rem; }
 .palette-toggle {

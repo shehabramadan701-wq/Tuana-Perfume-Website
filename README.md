@@ -151,7 +151,7 @@ npm run dev
 | عايز تغيّر | فين |
 |---|---|
 | النصوص (عربي/إنجليزي) | `client/src/i18n/translations.js` |
-| ألوان الموقع (باليتة جاهزة) | `client/src/palettes.js` ← غيّر `DEFAULT_PALETTE` لـ: `ivory` / `emerald` / `navy` / `burgundy` / `onyx` / `rose` |
+| ألوان الموقع (باليتة جاهزة) | `client/src/palettes.js` ← غيّر `DEFAULT_PALETTE` لـ: `royal` (الحالي) / `burgundy` (النسخة السابقة) / `ivory` / `emerald` / `navy` / `onyx` / `rose` |
 | تفاصيل الألوان | `client/src/styles/palettes.css` و أول ملف `client/src/styles/main.css` |
 | اسم البراند في المقدمة | `client/src/components/Intro.jsx` |
 | رقم التليفون والإيميل | `client/src/components/Footer.jsx` |

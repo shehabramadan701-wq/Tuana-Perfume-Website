@@ -3,13 +3,15 @@
 // The colors themselves are in styles/palettes.css
 import { IS_DEMO } from './api';
 
-export const DEFAULT_PALETTE = 'burgundy';
+export const DEFAULT_PALETTE = 'royal';
+// backup of the previous design: 'burgundy'
 
 export const palettes = [
   { id: 'ivory',    ar: 'عاجي وذهبي',      en: 'Ivory & Gold',     swatch: ['#FFFFFF', '#D4AA5A'] },
   { id: 'emerald',  ar: 'زمردي وذهبي',     en: 'Emerald & Gold',   swatch: ['#1F4D45', '#D4AA5A'] },
   { id: 'navy',     ar: 'كحلي وذهبي',      en: 'Navy & Gold',      swatch: ['#1C2541', '#D4AA5A'] },
-  { id: 'burgundy', ar: 'عنابي وذهبي',     en: 'Burgundy & Gold',  swatch: ['#6B1E2E', '#D4AA5A'] },
+  { id: 'royal',    ar: 'عنابي ملكي (الجديد)', en: 'Royal Burgundy (new)', swatch: ['#5E1526', '#D4AA5A'] },
+  { id: 'burgundy', ar: 'عنابي كلاسيك (السابق)', en: 'Burgundy classic (previous)', swatch: ['#6B1E2E', '#FFFFFF'] },
   { id: 'onyx',     ar: 'أسود وذهبي',      en: 'Onyx & Gold',      swatch: ['#161616', '#D4AA5A'] },
   { id: 'rose',     ar: 'وردي وذهبي',      en: 'Rose & Gold',      swatch: ['#C98F98', '#D4AA5A'] },
 ];
