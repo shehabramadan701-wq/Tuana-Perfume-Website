@@ -1,7 +1,8 @@
-Put your photos here.
+Photos of the website.
 
-hero-bottle.png   -> the big perfume in the opening animation and at the top of the home page
-                     (a PNG with a transparent background looks best: remove.bg can do that)
+hero.jpg      -> the photo in the opening animation and inside the arch at the top of the home page
+                 (replace it with your own photo, same name, a tall/portrait photo looks best)
+story.jpg     -> the photo in the "Our Story" section
+products/     -> product photos (stock photos for now, see CREDITS.txt)
 
-Product photos: upload them from the dashboard (Products > Edit > Upload photo),
-or put them here and write /images/your-photo.png in the product's image link.
+To change a product photo: dashboard > Products > Edit > Upload photo

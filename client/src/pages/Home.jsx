@@ -4,7 +4,6 @@ import Intro from '../components/Intro';
 import Navbar from '../components/Navbar';
 import CartDrawer from '../components/CartDrawer';
 import ProductCard from '../components/ProductCard';
-import Bottle from '../components/Bottle';
 import HeroBottle from '../components/HeroBottle';
 import Ornament from '../components/Ornament';
 import Footer from '../components/Footer';
@@ -61,7 +60,7 @@ export default function Home() {
         <div className="hero-visual">
           <div className="arch">
             <div className="arch-inner">
-              <div className="float"><HeroBottle size={300} /></div>
+              <HeroBottle size={300} />
             </div>
           </div>
           <div className="hero-badge">
@@ -108,10 +107,9 @@ export default function Home() {
         <div className="story-visual">
           <div className="arch arch-small">
             <div className="arch-inner">
-              <div className="story-bottles">
-                <Bottle color="#8C3B2E" size={170} />
-                <Bottle color="#B8893B" size={210} />
-                <Bottle color="#3E4A5C" size={170} />
+              {/* photo: client/public/images/story.jpg */}
+              <div className="hero-arch-photo">
+                <img src={import.meta.env.BASE_URL + 'images/story.jpg'} alt="TUANA" />
               </div>
             </div>
           </div>

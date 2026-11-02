@@ -299,8 +299,14 @@ html[lang='ar'] .eyebrow { font-family: 'Amiri', serif; letter-spacing: 0; font-
 }
 .product-image img, .drawer-thumb img { width: 100%; height: 100%; object-fit: cover; }
 .drawer-thumb { overflow: hidden; }
-/* real photos: the big hero / intro perfume */
-.hero-photo { width: auto; max-width: 100%; object-fit: contain; filter: drop-shadow(0 25px 22px rgba(60, 20, 20, 0.35)); }
+/* real photos: the hero photo fills the big arch, the intro photo sits in a small gold arch */
+.hero-arch-photo { position: absolute; inset: 0; }
+.hero-arch-photo img { width: 100%; height: 100%; object-fit: cover; animation: slowZoom 18s ease-in-out infinite alternate; }
+.arch-inner:has(.hero-arch-photo) { padding: 0; }
+.arch-inner:has(.hero-arch-photo)::before { display: none; }
+@keyframes slowZoom { from { transform: scale(1); } to { transform: scale(1.08); } }
+.photo-arch { border-radius: 999px 999px 14px 14px; padding: 6px; background: linear-gradient(160deg, #F3E2B0, #B8893B 45%, #F1DDA6 75%, #B8893B); }
+.photo-arch img { width: 100%; height: 100%; object-fit: cover; border-radius: 999px 999px 10px 10px; display: block; }
 .product-card:hover .bottle-svg { transform: rotate(-4deg) scale(1.04); }
 .bottle-svg { transition: 0.5s; }
 .product-cat { color: var(--gold); font-size: 0.9rem; }

@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import Bottle from '../components/Bottle';
+import HeroBottle from '../components/HeroBottle';
 import Ornament from '../components/Ornament';
 import { useLang } from '../i18n/LanguageContext';
 
@@ -9,7 +9,7 @@ export default function Success() {
 
   return (
     <div className="page-center success">
-      <div className="float"><Bottle color="#B8893B" size={180} /></div>
+      <div className="float"><HeroBottle size={220} framed /></div>
       <h1>{t('ok.title')}</h1>
       <Ornament />
       <p>{t('ok.text')}</p>

@@ -1,0 +1,12 @@
+Stock photos used as placeholders until the shop's own product photos are ready.
+All are free for commercial use under the Unsplash License / Pexels License (no attribution required).
+
+hero.jpg, products/oud-reale.jpg      https://unsplash.com/photos/photo-1622618991746-fe6004db3a47
+products/nero-di-oud.jpg              https://unsplash.com/photos/photo-1608571423902-eed4a5ad8108
+products/khumra-sultana.jpg           https://unsplash.com/photos/photo-1617897903246-719242758050
+products/khumra-di-rosa.jpg           https://www.pexels.com/photo/4041391/
+products/musk-bianco.jpg              https://www.pexels.com/photo/932577/
+products/ambra-del-deserto.jpg        https://www.pexels.com/photo/8361491/
+products/notte-d-oriente.jpg          https://www.pexels.com/photo/3059609/
+products/bakhoor-antico.jpg           https://www.pexels.com/photo/7795762/
+story.jpg                             https://unsplash.com/photos/photo-1594125311687-3b1b3eafa9f4

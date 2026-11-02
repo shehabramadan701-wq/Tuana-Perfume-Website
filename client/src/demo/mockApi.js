@@ -34,14 +34,14 @@ const sampleSteps = [
 ];
 
 const sampleProducts = [
-  { id: 1, name_ar: 'عود ملكي', name_en: 'Oud Reale', description_ar: 'عود كمبودي معتّق بلمسة من الورد الطائفي.', description_en: 'Aged Cambodian oud, softened with a whisper of Taif rose.', category: 'oud', price: 2450, size: '50 ml', color: '#5B3A1E' },
-  { id: 2, name_ar: 'دهن العود الأسود', name_en: 'Nero di Oud', description_ar: 'دهن عود خالص، عميق وداخن يدوم طويلاً.', description_en: 'Pure oud oil — deep, smoky and endlessly long-lasting.', category: 'oud', price: 3200, size: '12 ml', color: '#2E1F17' },
-  { id: 3, name_ar: 'خمرة الشيوخ', name_en: 'Khumra Sultana', description_ar: 'خمرة مخملية من العنبر والمسك والزعفران.', description_en: 'A velvet khumra of amber, musk and precious saffron.', category: 'khumra', price: 1350, size: '60 g', color: '#8C3B2E' },
-  { id: 4, name_ar: 'خمرة الورد', name_en: 'Khumra di Rosa', description_ar: 'خمرة ناعمة بالورد الدمشقي والفانيليا.', description_en: 'Soft khumra of Damascene rose and warm vanilla.', category: 'khumra', price: 1150, size: '60 g', color: '#B5654A' },
-  { id: 5, name_ar: 'مسك الطهارة', name_en: 'Musk Bianco', description_ar: 'مسك أبيض نقي ناعم كالحرير.', description_en: 'Pure white musk, clean and soft as silk.', category: 'perfume', price: 890, size: '100 ml', color: '#C9B79C' },
-  { id: 6, name_ar: 'عنبر الصحراء', name_en: 'Ambra del Deserto', description_ar: 'عنبر دافئ مع الهيل وخشب الصندل.', description_en: 'Warm amber with cardamom and sandalwood.', category: 'perfume', price: 1650, size: '100 ml', color: '#B8893B' },
-  { id: 7, name_ar: 'ليالي الشرق', name_en: "Notte d'Oriente", description_ar: 'عطر ليلي من العود والباتشولي والجلد.', description_en: 'A night perfume of oud, patchouli and soft leather.', category: 'perfume', price: 1980, size: '75 ml', color: '#3E4A5C' },
-  { id: 8, name_ar: 'بخور الحرمين', name_en: 'Bakhoor Antico', description_ar: 'بخور فاخر بقطع العود والعنبر لتعطير البيت.', description_en: 'Fine bakhoor of oud chips and amber, to perfume the home.', category: 'bakhoor', price: 750, size: '40 g', color: '#6F4E37' },
+  { id: 1, name_ar: 'عود ملكي', name_en: 'Oud Reale', description_ar: 'عود كمبودي معتّق بلمسة من الورد الطائفي.', description_en: 'Aged Cambodian oud, softened with a whisper of Taif rose.', category: 'oud', price: 2450, size: '50 ml', color: '#5B3A1E', image_url: '/images/products/oud-reale.jpg' },
+  { id: 2, name_ar: 'دهن العود الأسود', name_en: 'Nero di Oud', description_ar: 'دهن عود خالص، عميق وداخن يدوم طويلاً.', description_en: 'Pure oud oil — deep, smoky and endlessly long-lasting.', category: 'oud', price: 3200, size: '12 ml', color: '#2E1F17', image_url: '/images/products/nero-di-oud.jpg' },
+  { id: 3, name_ar: 'خمرة الشيوخ', name_en: 'Khumra Sultana', description_ar: 'خمرة مخملية من العنبر والمسك والزعفران.', description_en: 'A velvet khumra of amber, musk and precious saffron.', category: 'khumra', price: 1350, size: '60 g', color: '#8C3B2E', image_url: '/images/products/khumra-sultana.jpg' },
+  { id: 4, name_ar: 'خمرة الورد', name_en: 'Khumra di Rosa', description_ar: 'خمرة ناعمة بالورد الدمشقي والفانيليا.', description_en: 'Soft khumra of Damascene rose and warm vanilla.', category: 'khumra', price: 1150, size: '60 g', color: '#B5654A', image_url: '/images/products/khumra-di-rosa.jpg' },
+  { id: 5, name_ar: 'مسك الطهارة', name_en: 'Musk Bianco', description_ar: 'مسك أبيض نقي ناعم كالحرير.', description_en: 'Pure white musk, clean and soft as silk.', category: 'perfume', price: 890, size: '100 ml', color: '#C9B79C', image_url: '/images/products/musk-bianco.jpg' },
+  { id: 6, name_ar: 'عنبر الصحراء', name_en: 'Ambra del Deserto', description_ar: 'عنبر دافئ مع الهيل وخشب الصندل.', description_en: 'Warm amber with cardamom and sandalwood.', category: 'perfume', price: 1650, size: '100 ml', color: '#B8893B', image_url: '/images/products/ambra-del-deserto.jpg' },
+  { id: 7, name_ar: 'ليالي الشرق', name_en: "Notte d'Oriente", description_ar: 'عطر ليلي من العود والباتشولي والجلد.', description_en: 'A night perfume of oud, patchouli and soft leather.', category: 'perfume', price: 1980, size: '75 ml', color: '#3E4A5C', image_url: '/images/products/notte-d-oriente.jpg' },
+  { id: 8, name_ar: 'بخور الحرمين', name_en: 'Bakhoor Antico', description_ar: 'بخور فاخر بقطع العود والعنبر لتعطير البيت.', description_en: 'Fine bakhoor of oud chips and amber, to perfume the home.', category: 'bakhoor', price: 750, size: '40 g', color: '#6F4E37', image_url: '/images/products/bakhoor-antico.jpg' },
 ];
 
 // "2026-11-02 10:30:00" for N days ago
@@ -135,20 +135,20 @@ export async function mockApi(path, options = {}) {
 
   // ----- products -----
   if (route.startsWith('/products')) {
-    const products = load('products', () => sampleProducts);
+    const products = load('products2', () => sampleProducts);
     if (method === 'GET') return [...products].reverse();
-    if (method === 'DELETE') { allowed('products.delete'); save('products', products.filter((p) => p.id !== id)); return {}; }
+    if (method === 'DELETE') { allowed('products.delete'); save('products2', products.filter((p) => p.id !== id)); return {}; }
     if (!body.name_ar || !body.name_en || !body.category || !(Number(body.price) > 0)) throw new Error('Name, category and price are required');
     const data = { ...body, price: Number(body.price) };
-    if (method === 'POST') { allowed('products.add'); save('products', [...products, { ...data, id: nextId(products) }]); }
-    if (method === 'PUT') { allowed('products.edit'); save('products', products.map((p) => (p.id === id ? { ...data, id } : p))); }
+    if (method === 'POST') { allowed('products.add'); save('products2', [...products, { ...data, id: nextId(products) }]); }
+    if (method === 'PUT') { allowed('products.edit'); save('products2', products.map((p) => (p.id === id ? { ...data, id } : p))); }
     return {};
   }
 
   // ----- categories -----
   if (route.startsWith('/categories')) {
     const categories = load('categories', () => sampleCategories);
-    const products = load('products', () => sampleProducts);
+    const products = load('products2', () => sampleProducts);
     const count = (slug) => products.filter((p) => p.category === slug).length;
     if (method === 'GET') return categories.map((c) => ({ ...c, products_count: count(c.slug) }));
     if (method === 'POST') {
@@ -231,7 +231,7 @@ export async function mockApi(path, options = {}) {
 
   if (route === '/orders/checkout') {
     const orders = loadOrders();
-    const products = load('products', () => sampleProducts);
+    const products = load('products2', () => sampleProducts);
     const lines = body.items.map((i) => ({ p: products.find((p) => p.id === i.id), q: i.quantity })).filter((l) => l.p);
     const order = {
       id: nextId(orders),

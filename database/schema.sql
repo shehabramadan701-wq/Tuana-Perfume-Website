@@ -120,6 +120,16 @@ INSERT INTO products (name_ar, name_en, description_ar, description_en, category
 ('ليالي الشرق',     'Notte d''Oriente', 'عطر ليلي من العود والباتشولي والجلد.',                'A night perfume of oud, patchouli and soft leather.',               'perfume', 1980, '75 ml',  '#3E4A5C'),
 ('بخور الحرمين',    'Bakhoor Antico',   'بخور فاخر بقطع العود والعنبر لتعطير البيت.',          'Fine bakhoor of oud chips and amber, to perfume the home.',         'bakhoor',  750, '40 g',   '#6F4E37');
 
+-- product photos (in client/public/images/products)
+UPDATE products SET image_url = '/images/products/oud-reale.jpg' WHERE name_en = 'Oud Reale';
+UPDATE products SET image_url = '/images/products/nero-di-oud.jpg' WHERE name_en = 'Nero di Oud';
+UPDATE products SET image_url = '/images/products/khumra-sultana.jpg' WHERE name_en = 'Khumra Sultana';
+UPDATE products SET image_url = '/images/products/khumra-di-rosa.jpg' WHERE name_en = 'Khumra di Rosa';
+UPDATE products SET image_url = '/images/products/musk-bianco.jpg' WHERE name_en = 'Musk Bianco';
+UPDATE products SET image_url = '/images/products/ambra-del-deserto.jpg' WHERE name_en = 'Ambra del Deserto';
+UPDATE products SET image_url = '/images/products/notte-d-oriente.jpg' WHERE name_en = 'Notte d''Oriente';
+UPDATE products SET image_url = '/images/products/bakhoor-antico.jpg' WHERE name_en = 'Bakhoor Antico';
+
 -- =============================================
 --  Demo orders (so the dashboard is not empty)
 --  Delete them later with:  DELETE FROM orders;
