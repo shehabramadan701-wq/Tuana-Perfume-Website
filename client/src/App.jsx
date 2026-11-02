@@ -8,6 +8,7 @@ import Sales from './pages/admin/Sales';
 import Products from './pages/admin/Products';
 import Categories from './pages/admin/Categories';
 import Users from './pages/admin/Users';
+import DeliveryStatuses from './pages/admin/DeliveryStatuses';
 import { can } from './auth';
 
 // Opens the page only if the logged-in user has the permission
@@ -34,6 +35,7 @@ export default function App() {
         <Route index element={<AdminHome />} />
         <Route path="products" element={<Allow permission="products.add"><Products /></Allow>} />
         <Route path="categories" element={<Allow permission="categories.add"><Categories /></Allow>} />
+        <Route path="shipping" element={<Allow permission="delivery.manage"><DeliveryStatuses /></Allow>} />
         <Route path="users" element={<Allow permission="users.manage"><Users /></Allow>} />
       </Route>
     </Routes>

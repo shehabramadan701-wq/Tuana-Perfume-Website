@@ -3,7 +3,8 @@
 const permissions = {
   admin: [
     'sales.view',        // sales page, orders and Excel
-    'orders.delivery',   // change shipping status (shipped / delivered ...)
+    'orders.delivery',   // change the shipping step of an order
+    'delivery.manage',   // add / rename / delete the shipping steps
     'products.add',
     'products.edit',
     'products.delete',

@@ -14,9 +14,8 @@ function daysAgo(n) {
 
 const emptyFilters = { from: '', to: '', status: '', delivery: '', search: '' };
 
-// shipping steps of an order (same list as server/routes/admin.js)
-const deliverySteps = ['new', 'preparing', 'shipped', 'delivered', 'cancelled'];
-const deliveryIcons = { new: '●', preparing: '⧗', shipped: '🚚', delivered: '✓', cancelled: '✕' };
+// colors of a shipping step: <span style={stepColors(step)}>
+const stepColors = (step) => ({ '--dl': step?.color || '#B8893B', '--dl-bg': (step?.color || '#B8893B') + '1f' });
 
 export default function Sales() {
   const { t, lang } = useLang();
@@ -24,6 +23,23 @@ export default function Sales() {
   const [filters, setFilters] = useState(emptyFilters);
   const [data, setData] = useState({ stats: {}, chart: [], orders: [] });
   const [loading, setLoading] = useState(true);
+  const [steps, setSteps] = useState([]); // shipping steps (editable from "Shipping steps" page)
+
+  useEffect(() => {
+    api('/delivery-statuses').then(setSteps).catch(() => {});
+  }, []);
+
+  const stepOf = (slug) => steps.find((s) => s.slug === (slug || 'new'));
+  const stepName = (slug) => {
+    const s = stepOf(slug);
+    return s ? (lang === 'ar' ? s.name_ar : s.name_en) : slug;
+  };
+  // the step after the current one ("cancelled" is never a next step)
+  const nextStep = (slug) => {
+    const flow = steps.filter((s) => s.slug !== 'cancelled');
+    const i = flow.findIndex((s) => s.slug === (slug || 'new'));
+    return i >= 0 ? flow[i + 1] : null;
+  };
 
   const m = (v) => money(v, currency, lang);
   const query = '?' + new URLSearchParams(filters).toString();
@@ -91,7 +107,7 @@ export default function Sales() {
         <label>{t('ad.delivery')}
           <select className="input" name="delivery" value={filters.delivery} onChange={change}>
             <option value="">{t('ad.allDelivery')}</option>
-            {deliverySteps.map((d) => <option key={d} value={d}>{t('dl.' + d)}</option>)}
+            {steps.map((s) => <option key={s.slug} value={s.slug}>{stepName(s.slug)}</option>)}
           </select>
         </label>
         <input className="input search" name="search" placeholder={t('ad.search')} value={filters.search} onChange={change} />
@@ -108,15 +124,16 @@ export default function Sales() {
 
       {/* ---------- Shipping summary (paid orders) — click to filter ---------- */}
       <div className="delivery-strip">
-        {deliverySteps.map((d) => (
+        {steps.map((s, i) => (
           <button
-            key={d}
-            className={`delivery-pill ${d} ${filters.delivery === d ? 'active' : ''}`}
-            onClick={() => setFilters({ ...filters, delivery: filters.delivery === d ? '' : d })}
+            key={s.slug}
+            style={stepColors(s)}
+            className={`delivery-pill ${filters.delivery === s.slug ? 'active' : ''}`}
+            onClick={() => setFilters({ ...filters, delivery: filters.delivery === s.slug ? '' : s.slug })}
           >
-            <span className="pill-icon">{deliveryIcons[d]}</span>
-            <span>{t('dl.' + d)}</span>
-            <strong>{orders.filter((o) => o.status === 'paid' && (o.delivery_status || 'new') === d).length}</strong>
+            <span className="pill-icon">{i + 1}</span>
+            <span>{stepName(s.slug)}</span>
+            <strong>{orders.filter((o) => o.status === 'paid' && (o.delivery_status || 'new') === s.slug).length}</strong>
           </button>
         ))}
       </div>
@@ -166,15 +183,25 @@ export default function Sales() {
                   <td><span className={`badge ${o.status}`}>{t('st.' + o.status)}</span></td>
                   <td>
                     {o.status !== 'paid' ? <span className="muted">—</span> : can('orders.delivery') ? (
-                      <select
-                        className={`delivery-select ${o.delivery_status || 'new'}`}
-                        value={o.delivery_status || 'new'}
-                        onChange={(e) => setDelivery(o, e.target.value)}
-                      >
-                        {deliverySteps.map((d) => <option key={d} value={d}>{deliveryIcons[d]} {t('dl.' + d)}</option>)}
-                      </select>
+                      <div className="delivery-cell">
+                        {/* pick any step */}
+                        <select
+                          className="delivery-select"
+                          style={stepColors(stepOf(o.delivery_status))}
+                          value={o.delivery_status || 'new'}
+                          onChange={(e) => setDelivery(o, e.target.value)}
+                        >
+                          {steps.map((s) => <option key={s.slug} value={s.slug}>{stepName(s.slug)}</option>)}
+                        </select>
+                        {/* or move to the next step in one click */}
+                        {nextStep(o.delivery_status) && (
+                          <button className="next-step" title={stepName(nextStep(o.delivery_status).slug)} onClick={() => setDelivery(o, nextStep(o.delivery_status).slug)}>
+                            {t('sh.next')} {lang === 'ar' ? '←' : '→'}
+                          </button>
+                        )}
+                      </div>
                     ) : (
-                      <span className={`delivery-select ${o.delivery_status || 'new'}`}>{t('dl.' + (o.delivery_status || 'new'))}</span>
+                      <span className="delivery-select" style={stepColors(stepOf(o.delivery_status))}>{stepName(o.delivery_status)}</span>
                     )}
                   </td>
                 </tr>

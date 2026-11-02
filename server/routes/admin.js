@@ -73,12 +73,11 @@ router.get('/summary', async (req, res) => {
 });
 
 // ---------- PUT /api/admin/orders/5/delivery  { delivery_status: 'shipped' } ----------
-const deliveryStatuses = ['new', 'preparing', 'shipped', 'delivered', 'cancelled'];
-
 router.put('/orders/:id/delivery', can('orders.delivery'), async (req, res) => {
   const { delivery_status } = req.body;
-  if (!deliveryStatuses.includes(delivery_status)) return res.status(400).json({ message: 'Unknown status' });
   try {
+    const [[step]] = await db.query('SELECT id FROM delivery_statuses WHERE slug = ?', [delivery_status]);
+    if (!step) return res.status(400).json({ message: 'Unknown status' });
     await db.query('UPDATE orders SET delivery_status = ? WHERE id = ?', [delivery_status, req.params.id]);
     res.json({ message: 'Saved' });
   } catch (err) {

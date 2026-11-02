@@ -10,6 +10,7 @@ const links = [
   { to: '/admin', label: 'side.sales', icon: '◈', permission: 'sales.view', end: true },
   { to: '/admin/products', label: 'side.products', icon: '❖', permission: 'products.add' },
   { to: '/admin/categories', label: 'side.categories', icon: '✦', permission: 'categories.add' },
+  { to: '/admin/shipping', label: 'side.shipping', icon: '➤', permission: 'delivery.manage' },
   { to: '/admin/users', label: 'side.users', icon: '♛', permission: 'users.manage' },
 ];
 

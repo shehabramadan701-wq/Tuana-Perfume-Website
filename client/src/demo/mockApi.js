@@ -9,7 +9,7 @@ import { getUser } from '../auth';
 
 // same lists as server/permissions.js
 const permissions = {
-  admin: ['sales.view', 'orders.delivery', 'products.add', 'products.edit', 'products.delete', 'categories.add', 'categories.delete', 'users.manage'],
+  admin: ['sales.view', 'orders.delivery', 'delivery.manage', 'products.add', 'products.edit', 'products.delete', 'categories.add', 'categories.delete', 'users.manage'],
   staff: ['products.add', 'products.delete', 'categories.add'],
 };
 
@@ -23,6 +23,14 @@ const sampleCategories = [
   { id: 2, slug: 'khumra', name_ar: 'خمرة', name_en: 'Khumra' },
   { id: 3, slug: 'perfume', name_ar: 'عطور', name_en: 'Perfumes' },
   { id: 4, slug: 'bakhoor', name_ar: 'بخور', name_en: 'Bakhoor' },
+];
+
+const sampleSteps = [
+  { id: 1, slug: 'new', name_ar: 'طلب جديد', name_en: 'New order', color: '#B8893B', sort_order: 1 },
+  { id: 2, slug: 'preparing', name_ar: 'قيد التجهيز', name_en: 'Preparing', color: '#C9771A', sort_order: 2 },
+  { id: 3, slug: 'shipped', name_ar: 'تم الشحن', name_en: 'Shipped', color: '#1F5A86', sort_order: 3 },
+  { id: 4, slug: 'delivered', name_ar: 'تم التوصيل', name_en: 'Delivered', color: '#2F6F4E', sort_order: 4 },
+  { id: 5, slug: 'cancelled', name_ar: 'ملغي', name_en: 'Cancelled', color: '#9C3A24', sort_order: 5 },
 ];
 
 const sampleProducts = [
@@ -160,6 +168,34 @@ export async function mockApi(path, options = {}) {
     }
   }
 
+  // ----- shipping steps -----
+  if (route.startsWith('/delivery-statuses')) {
+    const steps = load('steps', () => sampleSteps);
+    if (method === 'GET') {
+      const orders = loadOrders();
+      return [...steps]
+        .sort((a, b) => a.sort_order - b.sort_order || a.id - b.id)
+        .map((st) => ({ ...st, orders_count: orders.filter((o) => (o.delivery_status || 'new') === st.slug).length }));
+    }
+    allowed('delivery.manage');
+    if (method !== 'DELETE' && (!body.name_ar || !body.name_en)) throw new Error('Write the name in Arabic and English');
+    if (method === 'POST') {
+      const slug = body.name_en.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'step-' + Date.now();
+      if (steps.some((st) => st.slug === slug)) throw new Error('This status already exists');
+      save('steps', [...steps, { id: nextId(steps), slug, name_ar: body.name_ar, name_en: body.name_en, color: body.color || '#B8893B', sort_order: Math.max(0, ...steps.map((st) => st.sort_order)) + 1 }]);
+    }
+    if (method === 'PUT') {
+      save('steps', steps.map((st) => (st.id === id ? { ...st, name_ar: body.name_ar, name_en: body.name_en, color: body.color, sort_order: Number(body.sort_order) || 0 } : st)));
+    }
+    if (method === 'DELETE') {
+      const step = steps.find((st) => st.id === id);
+      if (step.slug === 'new') throw new Error('The "New order" step is used for every new order, it cannot be deleted');
+      if (loadOrders().some((o) => (o.delivery_status || 'new') === step.slug)) throw new Error('Move the orders of this step to another step first');
+      save('steps', steps.filter((st) => st.id !== id));
+    }
+    return {};
+  }
+
   // ----- login + users -----
   if (route === '/auth/login') {
     const user = load('users', () => sampleUsers).find((u) => u.email === body.email && u.password === body.password);
@@ -214,6 +250,7 @@ export async function mockApi(path, options = {}) {
   const delivery = route.match(/^\/admin\/orders\/(\d+)\/delivery$/);
   if (delivery) {
     allowed('orders.delivery');
+    if (!load('steps', () => sampleSteps).some((st) => st.slug === body.delivery_status)) throw new Error('Unknown status');
     saveOrders(loadOrders().map((o) => (o.id === Number(delivery[1]) ? { ...o, delivery_status: body.delivery_status } : o)));
     return {};
   }

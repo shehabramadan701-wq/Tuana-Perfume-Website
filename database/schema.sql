@@ -29,6 +29,16 @@ CREATE TABLE IF NOT EXISTS categories (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+-- ---------- Shipping statuses (حالات الشحن) — editable from the dashboard ----------
+CREATE TABLE IF NOT EXISTS delivery_statuses (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  slug       VARCHAR(40)  NOT NULL UNIQUE,       -- short english code saved on the order
+  name_ar    VARCHAR(100) NOT NULL,
+  name_en    VARCHAR(100) NOT NULL,
+  color      VARCHAR(20)  DEFAULT '#B8893B',
+  sort_order INT DEFAULT 0                       -- the order of the steps
+);
+
 -- ---------- Products (العطور) ----------
 CREATE TABLE IF NOT EXISTS products (
   id             INT AUTO_INCREMENT PRIMARY KEY,
@@ -56,7 +66,7 @@ CREATE TABLE IF NOT EXISTS orders (
   total          DECIMAL(10,2) NOT NULL,
   currency       VARCHAR(5) DEFAULT 'EGP',
   status         VARCHAR(20) DEFAULT 'pending',  -- payment:  pending | paid | failed
-  delivery_status VARCHAR(20) DEFAULT 'new',     -- shipping: new | preparing | shipped | delivered | cancelled
+  delivery_status VARCHAR(40) DEFAULT 'new',     -- shipping step (slug from delivery_statuses)
   payment_ref    VARCHAR(120),                   -- payment id from the gateway
   card_brand     VARCHAR(20),                    -- visa | mastercard
   card_last4     VARCHAR(4),
@@ -83,6 +93,13 @@ CREATE TABLE IF NOT EXISTS order_items (
 INSERT INTO users (name, email, password, role) VALUES
 ('Admin', 'admin@tuana.com', '$2a$10$BG1NyyLYKrmwp0Z3msZxzOFNIjqL4k0Y1XPOOL6NoWOHX2oT0InjG', 'admin'),
 ('Staff', 'staff@tuana.com', '$2a$10$FtMOtXyJjohN6qzpEyCYnuDTjemxxMqfWXy2u1nIM1FyS1A9Phoxm', 'staff');
+
+INSERT INTO delivery_statuses (slug, name_ar, name_en, color, sort_order) VALUES
+('new',       'طلب جديد',     'New order',  '#B8893B', 1),
+('preparing', 'قيد التجهيز',  'Preparing',  '#C9771A', 2),
+('shipped',   'تم الشحن',     'Shipped',    '#1F5A86', 3),
+('delivered', 'تم التوصيل',   'Delivered',  '#2F6F4E', 4),
+('cancelled', 'ملغي',         'Cancelled',  '#9C3A24', 5);
 
 INSERT INTO categories (slug, name_ar, name_en) VALUES
 ('oud', 'عود', 'Oud'),

@@ -24,6 +24,7 @@ Tuana-Perfume-Website/
 │       ├── products.js       ← المنتجات (عرض / إضافة / تعديل / حذف)
 │       ├── categories.js     ← الأقسام (عرض / إضافة / حذف)
 │       ├── users.js          ← مستخدمين الداشبورد (للمدير بس)
+│       ├── deliveryStatuses.js ← خطوات الشحن (طلب جديد / تم الشحن ...)
 │       ├── orders.js         ← إنشاء الطلب وتأكيد الدفع
 │       └── admin.js          ← صفحة المبيعات + الفلاتر + Excel
 │
@@ -39,7 +40,7 @@ Tuana-Perfume-Website/
         │   └── payment/      ← فورم الفيزا
         ├── auth.js           ← بيانات المستخدم اللي داخل + can('...')
         ├── pages/            ← Home / Checkout / Success
-        │   └── admin/        ← Login / AdminLayout (السايد بار) / Sales / Products / Categories / Users
+        │   └── admin/        ← Login / AdminLayout (السايد بار) / Sales / Products / Categories / DeliveryStatuses / Users
         └── styles/
             ├── main.css      ← ألوان وشكل الموقع 🎨
             └── admin.css     ← شكل الداشبورد
@@ -112,7 +113,7 @@ npm run dev
 
 | الحساب | الإيميل | الباسورد | يقدر يعمل إيه |
 |---|---|---|---|
-| مدير (admin) | `admin@tuana.com` | `change-me-123` | كل حاجة: المبيعات والطلبات وحالة الشحن و Excel، المنتجات (إضافة/تعديل/حذف)، الأقسام (إضافة/حذف)، المستخدمين |
+| مدير (admin) | `admin@tuana.com` | `change-me-123` | كل حاجة: المبيعات والطلبات وحالة الشحن وتعديل خطوات الشحن و Excel، المنتجات (إضافة/تعديل/حذف)، الأقسام (إضافة/حذف)، المستخدمين |
 | موظف (staff) | `staff@tuana.com` | `staff-123` | يضيف ويحذف المنتجات، ويضيف أقسام بس |
 
 - المدير يقدر يضيف مستخدمين جداد ويغير الباسوردات من صفحة **المستخدمين** في الداشبورد.
@@ -164,11 +165,25 @@ npm run dev
 لما تختار اللي عاجبك اكتب اسمه في `DEFAULT_PALETTE` في `client/src/palettes.js` — والزرار ده مش بيظهر في الموقع الحقيقي للعملاء.
 
 **🚚 حالة الشحن:** من صفحة المبيعات في الداشبورد، كل طلب مدفوع جنبه خانة **الشحن**:
-جديد ← قيد التجهيز ← تم الشحن ← تم التوصيل (أو ملغي). وفوق فيه عدّاد لكل حالة تدوس عليه يفلتر الطلبات.
+- تختار منها أي خطوة، أو تدوس **"التالي ←"** ينقل الطلب للخطوة اللي بعدها على طول.
+- فوق فيه عدّاد لكل خطوة، تدوس عليه يفلتر الطلبات.
+- الخطوات نفسها بتتعدّل من صفحة **حالات الشحن** في السايد بار: تغيّر الاسم واللون، ترتّبها بالأسهم ▲▼، تضيف خطوة جديدة (مثلاً "مع المندوب") أو تحذف.
+  - خطوة "طلب جديد" مينفعش تتحذف لأن كل طلب جديد بيبدأ بيها، وأي خطوة فيها طلبات لازم تنقل طلباتها الأول.
+  - "ملغي" عمرها ما بتبقى الخطوة "التالي" — بتختارها بإيدك بس.
 
-**لو قاعدة البيانات عندك معمولة قبل كده** ومش عايز تمسحها، ضيف خانة الشحن بالأمر ده (phpMyAdmin ← SQL):
+**لو قاعدة البيانات عندك معمولة قبل كده** ومش عايز تمسحها، شغّل ده مرة واحدة (phpMyAdmin ← SQL) عشان يضيف الشحن:
 ```sql
-ALTER TABLE orders ADD COLUMN delivery_status VARCHAR(20) DEFAULT 'new' AFTER status;
+ALTER TABLE orders ADD COLUMN delivery_status VARCHAR(40) DEFAULT 'new' AFTER status;
+
+CREATE TABLE delivery_statuses (
+  id INT AUTO_INCREMENT PRIMARY KEY, slug VARCHAR(40) NOT NULL UNIQUE,
+  name_ar VARCHAR(100) NOT NULL, name_en VARCHAR(100) NOT NULL,
+  color VARCHAR(20) DEFAULT '#B8893B', sort_order INT DEFAULT 0
+);
+INSERT INTO delivery_statuses (slug, name_ar, name_en, color, sort_order) VALUES
+('new','طلب جديد','New order','#B8893B',1), ('preparing','قيد التجهيز','Preparing','#C9771A',2),
+('shipped','تم الشحن','Shipped','#1F5A86',3), ('delivered','تم التوصيل','Delivered','#2F6F4E',4),
+('cancelled','ملغي','Cancelled','#9C3A24',5);
 ```
 
 **مسح الطلبات التجريبية** قبل ما تفتح المحل (من phpMyAdmin ← SQL):
