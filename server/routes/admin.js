@@ -1,18 +1,11 @@
+// Sales page: summary + Excel (admin only, see permissions.js)
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
 const ExcelJS = require('exceljs');
 const db = require('../db');
 const auth = require('../middleware/auth');
+const { can } = auth;
 
-// ---------- POST /api/admin/login ----------
-router.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    return res.json({ token });
-  }
-  res.status(401).json({ message: 'Wrong email or password' });
-});
+router.use(auth, can('sales.view'));
 
 // ---------- Filters used by all dashboard routes ----------
 // ?from=2026-11-01&to=2026-11-30&status=paid&search=ahmed
@@ -48,7 +41,7 @@ async function getOrders(query) {
 }
 
 // ---------- GET /api/admin/summary  (cards + chart + table) ----------
-router.get('/summary', auth, async (req, res) => {
+router.get('/summary', async (req, res) => {
   try {
     const orders = await getOrders(req.query);
     const paid = orders.filter((o) => o.status === 'paid');
@@ -79,7 +72,7 @@ router.get('/summary', auth, async (req, res) => {
 });
 
 // ---------- GET /api/admin/export  (Excel file) ----------
-router.get('/export', auth, async (req, res) => {
+router.get('/export', async (req, res) => {
   try {
     const orders = await getOrders(req.query);
 

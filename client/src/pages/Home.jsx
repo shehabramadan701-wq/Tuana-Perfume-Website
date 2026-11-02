@@ -11,24 +11,29 @@ import { useLang } from '../i18n/LanguageContext';
 import useConfig from '../context/useConfig';
 import { api, scrollToId } from '../api';
 
-const categories = ['all', 'oud', 'khumra', 'perfume', 'bakhoor'];
 
 export default function Home() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { currency } = useConfig();
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [category, setCategory] = useState('all');
   // the intro shows once per visit
   const [showIntro, setShowIntro] = useState(!sessionStorage.getItem('tuana_intro'));
 
   useEffect(() => {
     api('/products').then(setProducts).catch(console.error);
+    api('/categories').then(setCategories).catch(console.error);
   }, []);
 
   function closeIntro() {
     sessionStorage.setItem('tuana_intro', '1');
     setShowIntro(false);
   }
+
+  // category name in the current language
+  const catName = (c) => (lang === 'ar' ? c.name_ar : c.name_en);
+  const catOf = (slug) => categories.find((c) => c.slug === slug);
 
   const shown = category === 'all' ? products : products.filter((p) => p.category === category);
 
@@ -83,15 +88,16 @@ export default function Home() {
         </div>
 
         <div className="tabs">
-          {categories.map((c) => (
-            <button key={c} className={category === c ? 'active' : ''} onClick={() => setCategory(c)}>
-              {t('cat.' + c)}
+          <button className={category === 'all' ? 'active' : ''} onClick={() => setCategory('all')}>{t('cat.all')}</button>
+          {categories.filter((c) => c.products_count > 0).map((c) => (
+            <button key={c.slug} className={category === c.slug ? 'active' : ''} onClick={() => setCategory(c.slug)}>
+              {catName(c)}
             </button>
           ))}
         </div>
 
         <div className="products-grid">
-          {shown.map((p) => <ProductCard key={p.id} product={p} currency={currency} />)}
+          {shown.map((p) => <ProductCard key={p.id} product={p} currency={currency} categoryName={catOf(p.category) ? catName(catOf(p.category)) : ''} />)}
         </div>
       </section>
 

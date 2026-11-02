@@ -5,9 +5,27 @@
 //  orders in the visitor's browser. The real site never uses this file.
 // =====================================================================
 
-export const DEMO_LOGIN = { email: 'admin@tuana.com', password: 'change-me-123' };
+import { getUser } from '../auth';
 
-const products = [
+// same lists as server/permissions.js
+const permissions = {
+  admin: ['sales.view', 'products.add', 'products.edit', 'products.delete', 'categories.add', 'categories.delete', 'users.manage'],
+  staff: ['products.add', 'products.delete', 'categories.add'],
+};
+
+const sampleUsers = [
+  { id: 1, name: 'Admin', email: 'admin@tuana.com', password: 'change-me-123', role: 'admin' },
+  { id: 2, name: 'Staff', email: 'staff@tuana.com', password: 'staff-123', role: 'staff' },
+];
+
+const sampleCategories = [
+  { id: 1, slug: 'oud', name_ar: 'عود', name_en: 'Oud' },
+  { id: 2, slug: 'khumra', name_ar: 'خمرة', name_en: 'Khumra' },
+  { id: 3, slug: 'perfume', name_ar: 'عطور', name_en: 'Perfumes' },
+  { id: 4, slug: 'bakhoor', name_ar: 'بخور', name_en: 'Bakhoor' },
+];
+
+const sampleProducts = [
   { id: 1, name_ar: 'عود ملكي', name_en: 'Oud Reale', description_ar: 'عود كمبودي معتّق بلمسة من الورد الطائفي.', description_en: 'Aged Cambodian oud, softened with a whisper of Taif rose.', category: 'oud', price: 2450, size: '50 ml', color: '#5B3A1E' },
   { id: 2, name_ar: 'دهن العود الأسود', name_en: 'Nero di Oud', description_ar: 'دهن عود خالص، عميق وداخن يدوم طويلاً.', description_en: 'Pure oud oil — deep, smoky and endlessly long-lasting.', category: 'oud', price: 3200, size: '12 ml', color: '#2E1F17' },
   { id: 3, name_ar: 'خمرة الشيوخ', name_en: 'Khumra Sultana', description_ar: 'خمرة مخملية من العنبر والمسك والزعفران.', description_en: 'A velvet khumra of amber, musk and precious saffron.', category: 'khumra', price: 1350, size: '60 g', color: '#8C3B2E' },
@@ -44,16 +62,23 @@ function sampleOrders() {
   }));
 }
 
-// orders are kept in this browser only
-function loadOrders() {
+// everything is kept in this browser only
+function load(key, fallback) {
   try {
-    const saved = JSON.parse(localStorage.getItem('tuana_demo_orders'));
+    const saved = JSON.parse(localStorage.getItem('tuana_demo_' + key));
     if (Array.isArray(saved)) return saved;
   } catch {}
-  return sampleOrders();
+  return fallback();
 }
-function saveOrders(orders) {
-  try { localStorage.setItem('tuana_demo_orders', JSON.stringify(orders)); } catch {}
+function save(key, list) {
+  try { localStorage.setItem('tuana_demo_' + key, JSON.stringify(list)); } catch {}
+}
+const loadOrders = () => load('orders', sampleOrders);
+const saveOrders = (list) => save('orders', list);
+const nextId = (list) => Math.max(0, ...list.map((x) => x.id)) + 1;
+
+function allowed(permission) {
+  if (!permissions[getUser()?.role]?.includes(permission)) throw new Error('You do not have permission for this');
 }
 
 function filterOrders(query) {
@@ -92,14 +117,80 @@ export async function mockApi(path, options = {}) {
   const body = options.body || {};
   await new Promise((r) => setTimeout(r, 250)); // feel like a real server
 
+  const method = options.method || 'GET';
+  const idMatch = route.match(/\/(\d+)/);
+  const id = idMatch ? Number(idMatch[1]) : null;
+
   if (route === '/config') return { currency: 'EGP', paymentMode: 'demo', stripePublishableKey: '' };
-  if (route === '/products') return products;
+
+  // ----- products -----
+  if (route.startsWith('/products')) {
+    const products = load('products', () => sampleProducts);
+    if (method === 'GET') return [...products].reverse();
+    if (method === 'DELETE') { allowed('products.delete'); save('products', products.filter((p) => p.id !== id)); return {}; }
+    if (!body.name_ar || !body.name_en || !body.category || !(Number(body.price) > 0)) throw new Error('Name, category and price are required');
+    const data = { ...body, price: Number(body.price) };
+    if (method === 'POST') { allowed('products.add'); save('products', [...products, { ...data, id: nextId(products) }]); }
+    if (method === 'PUT') { allowed('products.edit'); save('products', products.map((p) => (p.id === id ? { ...data, id } : p))); }
+    return {};
+  }
+
+  // ----- categories -----
+  if (route.startsWith('/categories')) {
+    const categories = load('categories', () => sampleCategories);
+    const products = load('products', () => sampleProducts);
+    const count = (slug) => products.filter((p) => p.category === slug).length;
+    if (method === 'GET') return categories.map((c) => ({ ...c, products_count: count(c.slug) }));
+    if (method === 'POST') {
+      allowed('categories.add');
+      if (!body.name_ar || !body.name_en) throw new Error('Write the name in Arabic and English');
+      const slug = body.name_en.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'cat-' + Date.now();
+      if (categories.some((c) => c.slug === slug)) throw new Error('This category already exists');
+      save('categories', [...categories, { id: nextId(categories), slug, name_ar: body.name_ar, name_en: body.name_en }]);
+      return {};
+    }
+    if (method === 'DELETE') {
+      allowed('categories.delete');
+      const cat = categories.find((c) => c.id === id);
+      if (count(cat.slug) > 0) throw new Error('Delete or move the products of this category first');
+      save('categories', categories.filter((c) => c.id !== id));
+      return {};
+    }
+  }
+
+  // ----- login + users -----
+  if (route === '/auth/login') {
+    const user = load('users', () => sampleUsers).find((u) => u.email === body.email && u.password === body.password);
+    if (!user) throw new Error('Wrong email or password');
+    const { password, ...info } = user;
+    return { token: 'demo', user: { ...info, permissions: permissions[user.role] } };
+  }
+  if (route.startsWith('/users')) {
+    allowed('users.manage');
+    const users = load('users', () => sampleUsers);
+    if (method === 'GET') return users.map(({ password, ...u }) => u);
+    if (method === 'POST') {
+      if (!body.name || !body.email || !body.password || body.password.length < 6) throw new Error('Name, email and a password of 6+ characters are required');
+      if (users.some((u) => u.email === body.email)) throw new Error('This email is already used');
+      save('users', [...users, { ...body, id: nextId(users), role: body.role === 'admin' ? 'admin' : 'staff' }]);
+    }
+    if (method === 'PUT') {
+      if (!body.password || body.password.length < 6) throw new Error('Password must be 6+ characters');
+      save('users', users.map((u) => (u.id === id ? { ...u, password: body.password } : u)));
+    }
+    if (method === 'DELETE') {
+      if (users.find((u) => u.id === id)?.email === getUser()?.email) throw new Error('You cannot delete yourself');
+      save('users', users.filter((u) => u.id !== id));
+    }
+    return {};
+  }
 
   if (route === '/orders/checkout') {
     const orders = loadOrders();
+    const products = load('products', () => sampleProducts);
     const lines = body.items.map((i) => ({ p: products.find((p) => p.id === i.id), q: i.quantity })).filter((l) => l.p);
     const order = {
-      id: Math.max(0, ...orders.map((o) => o.id)) + 1,
+      id: nextId(orders),
       customer_name: body.customer.name, email: body.customer.email, phone: body.customer.phone, city: body.customer.city,
       items: lines.map((l) => `${l.p.name_en} x${l.q}`).join(', '),
       total: lines.reduce((s, l) => s + l.p.price * l.q, 0),
@@ -118,12 +209,8 @@ export async function mockApi(path, options = {}) {
     return { status: 'paid' };
   }
 
-  if (route === '/admin/login') {
-    if (body.email === DEMO_LOGIN.email && body.password === DEMO_LOGIN.password) return { token: 'demo' };
-    throw new Error('Wrong email or password');
-  }
-  if (route === '/admin/summary') return summary(query);
-  if (route === '/admin/export') return exportFile(query);
+  if (route === '/admin/summary') { allowed('sales.view'); return summary(query); }
+  if (route === '/admin/export') { allowed('sales.view'); return exportFile(query); }
 
   throw new Error('Not found');
 }

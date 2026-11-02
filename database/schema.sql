@@ -9,6 +9,26 @@ CREATE DATABASE IF NOT EXISTS tuana_perfume
 USE tuana_perfume;
 SET NAMES utf8mb4;
 
+-- ---------- Users who can open the dashboard ----------
+-- role: admin = everything | staff = products + categories only
+CREATE TABLE IF NOT EXISTS users (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  name       VARCHAR(100) NOT NULL,
+  email      VARCHAR(150) NOT NULL UNIQUE,
+  password   VARCHAR(100) NOT NULL,              -- saved encrypted (bcrypt), never as plain text
+  role       VARCHAR(20)  NOT NULL DEFAULT 'staff',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ---------- Categories (الأقسام) ----------
+CREATE TABLE IF NOT EXISTS categories (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  slug       VARCHAR(40)  NOT NULL UNIQUE,       -- short english code, e.g. oud
+  name_ar    VARCHAR(100) NOT NULL,
+  name_en    VARCHAR(100) NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- ---------- Products (العطور) ----------
 CREATE TABLE IF NOT EXISTS products (
   id             INT AUTO_INCREMENT PRIMARY KEY,
@@ -16,7 +36,7 @@ CREATE TABLE IF NOT EXISTS products (
   name_en        VARCHAR(150) NOT NULL,
   description_ar TEXT,
   description_en TEXT,
-  category       VARCHAR(30)  NOT NULL,          -- oud | khumra | perfume | bakhoor
+  category       VARCHAR(40)  NOT NULL,          -- the category slug (see categories table)
   price          DECIMAL(10,2) NOT NULL,
   size           VARCHAR(30),                    -- e.g. 50 ml
   color          VARCHAR(20) DEFAULT '#8B5A2B',  -- bottle color (used when no image)
@@ -53,6 +73,21 @@ CREATE TABLE IF NOT EXISTS order_items (
   quantity     INT NOT NULL DEFAULT 1,
   FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
 );
+
+-- =============================================
+--  Dashboard users  (change the passwords from the "Users" page!)
+--    admin@tuana.com  /  change-me-123   -> admin (everything)
+--    staff@tuana.com  /  staff-123       -> staff (products + categories)
+-- =============================================
+INSERT INTO users (name, email, password, role) VALUES
+('Admin', 'admin@tuana.com', '$2a$10$BG1NyyLYKrmwp0Z3msZxzOFNIjqL4k0Y1XPOOL6NoWOHX2oT0InjG', 'admin'),
+('Staff', 'staff@tuana.com', '$2a$10$FtMOtXyJjohN6qzpEyCYnuDTjemxxMqfWXy2u1nIM1FyS1A9Phoxm', 'staff');
+
+INSERT INTO categories (slug, name_ar, name_en) VALUES
+('oud', 'عود', 'Oud'),
+('khumra', 'خمرة', 'Khumra'),
+('perfume', 'عطور', 'Perfumes'),
+('bakhoor', 'بخور', 'Bakhoor');
 
 -- =============================================
 --  Sample products (you can edit / delete them)

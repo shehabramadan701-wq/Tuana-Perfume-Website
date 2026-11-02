@@ -1,4 +1,5 @@
 import { mockApi } from './demo/mockApi';
+import { logout } from './auth';
 
 // true only in the online preview build (npm run build:demo)
 export const IS_DEMO = import.meta.env.VITE_DEMO === 'true';
@@ -17,6 +18,12 @@ export async function api(path, options = {}) {
     },
     body: options.body ? JSON.stringify(options.body) : undefined,
   });
+
+  // login expired -> back to the login page
+  if (res.status === 401 && !path.startsWith('/auth')) {
+    logout();
+    window.location.reload();
+  }
 
   if (options.raw) return res; // used for downloading the Excel file
   const data = await res.json().catch(() => ({}));
