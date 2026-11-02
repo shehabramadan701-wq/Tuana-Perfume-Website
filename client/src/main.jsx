@@ -1,17 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, HashRouter } from 'react-router-dom';
+import { IS_DEMO } from './api';
 import App from './App';
 import { LanguageProvider } from './i18n/LanguageContext';
 import { CartProvider } from './context/CartContext';
 import './styles/main.css';
 
+// the online preview (GitHub Pages) needs HashRouter: links look like /#/checkout
+const Router = IS_DEMO ? HashRouter : BrowserRouter;
+
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
+  <Router>
     <LanguageProvider>
       <CartProvider>
         <App />
       </CartProvider>
     </LanguageProvider>
-  </BrowserRouter>
+  </Router>
 );

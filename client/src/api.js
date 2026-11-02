@@ -1,5 +1,12 @@
+import { mockApi } from './demo/mockApi';
+
+// true only in the online preview build (npm run build:demo)
+export const IS_DEMO = import.meta.env.VITE_DEMO === 'true';
+
 // Small helper to talk to the server. Example: api('/products')
 export async function api(path, options = {}) {
+  if (IS_DEMO) return mockApi(path, options);
+
   const token = localStorage.getItem('tuana_token');
 
   const res = await fetch('/api' + path, {
@@ -15,6 +22,12 @@ export async function api(path, options = {}) {
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.message || 'Something went wrong');
   return data;
+}
+
+// Smooth scroll to a section of the page: <a onClick={(e) => scrollToId(e, 'story')}>
+export function scrollToId(event, id) {
+  event.preventDefault();
+  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 }
 
 // Format a price: 2450 -> "EGP 2,450" / "٢٬٤٥٠ ج.م.‏"

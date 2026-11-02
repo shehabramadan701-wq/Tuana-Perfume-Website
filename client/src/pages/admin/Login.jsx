@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Ornament from '../../components/Ornament';
 import { useLang } from '../../i18n/LanguageContext';
-import { api } from '../../api';
+import { api, IS_DEMO } from '../../api';
+import { DEMO_LOGIN } from '../../demo/mockApi';
 import '../../styles/admin.css';
 
 export default function Login() {
   const { t, lang, toggleLang } = useLang();
   const navigate = useNavigate();
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [form, setForm] = useState(IS_DEMO ? DEMO_LOGIN : { email: '', password: '' });
   const [error, setError] = useState('');
 
   async function submit(e) {

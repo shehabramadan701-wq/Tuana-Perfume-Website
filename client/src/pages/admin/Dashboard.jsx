@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLang } from '../../i18n/LanguageContext';
 import useConfig from '../../context/useConfig';
-import { api, money } from '../../api';
+import { api, money, IS_DEMO } from '../../api';
 import '../../styles/admin.css';
 
 // "2026-11-02" for a date that is N days ago
@@ -50,7 +50,7 @@ export default function Dashboard() {
     const blob = await res.blob();
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `tuana-orders-${daysAgo(0)}.xlsx`;
+    link.download = `tuana-orders-${daysAgo(0)}.${IS_DEMO ? 'csv' : 'xlsx'}`;
     link.click();
   }
 

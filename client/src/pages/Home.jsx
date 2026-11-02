@@ -9,7 +9,7 @@ import Ornament from '../components/Ornament';
 import Footer from '../components/Footer';
 import { useLang } from '../i18n/LanguageContext';
 import useConfig from '../context/useConfig';
-import { api } from '../api';
+import { api, scrollToId } from '../api';
 
 const categories = ['all', 'oud', 'khumra', 'perfume', 'bakhoor'];
 
@@ -46,8 +46,8 @@ export default function Home() {
           <Ornament />
           <p>{t('hero.text')}</p>
           <div className="hero-buttons">
-            <a href="#collection" className="btn">{t('hero.cta')}</a>
-            <a href="#story" className="btn btn-outline">{t('hero.cta2')}</a>
+            <a href="#collection" className="btn" onClick={(e) => scrollToId(e, 'collection')}>{t('hero.cta')}</a>
+            <a href="#story" className="btn btn-outline" onClick={(e) => scrollToId(e, 'story')}>{t('hero.cta2')}</a>
           </div>
         </div>
 

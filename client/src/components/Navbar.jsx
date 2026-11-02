@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom';
 import { useLang } from '../i18n/LanguageContext';
 import { useCart } from '../context/CartContext';
+import { scrollToId } from '../api';
 
 export default function Navbar() {
   const { t, lang, toggleLang } = useLang();
@@ -7,15 +9,15 @@ export default function Navbar() {
 
   return (
     <header className="navbar">
-      <a href="/" className="logo">
+      <Link to="/" className="logo">
         <span className="logo-en">TUANA</span>
         <span className="logo-ar">توانا</span>
-      </a>
+      </Link>
 
       <nav className="nav-links">
-        <a href="#collection">{t('nav.collection')}</a>
-        <a href="#story">{t('nav.story')}</a>
-        <a href="#contact">{t('nav.contact')}</a>
+        <a href="#collection" onClick={(e) => scrollToId(e, 'collection')}>{t('nav.collection')}</a>
+        <a href="#story" onClick={(e) => scrollToId(e, 'story')}>{t('nav.story')}</a>
+        <a href="#contact" onClick={(e) => scrollToId(e, 'contact')}>{t('nav.contact')}</a>
       </nav>
 
       <div className="nav-actions">
