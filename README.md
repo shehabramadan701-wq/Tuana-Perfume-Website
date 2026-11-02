@@ -1,0 +1,132 @@
+# TUANA — موقع عطور عربية (Node.js + React + MySQL)
+
+متجر عطور عربي (عود، خمرة، عطور، بخور) بألوان فاتحة وروح عربية أصيلة، عربي وإنجليزي (الإنجليزي بذوق إيطالي).
+فيه **مقدمة متحركة** لزجاجة البرفان وهي نازلة من السما مع اسم البراند، و**صفحة دفع بالفيزا/ماستركارد**، و**داشبورد** للحسابات بفلاتر وتصدير Excel.
+
+---
+
+## 📁 تنظيم الفولدرات
+
+```
+Tuana-Perfume-Website/
+├── database/
+│   └── schema.sql            ← قاعدة البيانات + منتجات وطلبات تجريبية
+│
+├── server/                   ← الباك إند (Node.js + Express)
+│   ├── index.js              ← نقطة تشغيل السيرفر
+│   ├── db.js                 ← الاتصال بـ MySQL
+│   ├── .env.example          ← الإعدادات (انسخه باسم .env)
+│   ├── middleware/auth.js    ← حماية الداشبورد بتسجيل الدخول
+│   ├── services/payment.js   ← بوابة الدفع (مخفية عن العميل)
+│   └── routes/
+│       ├── products.js       ← جلب المنتجات
+│       ├── orders.js         ← إنشاء الطلب وتأكيد الدفع
+│       └── admin.js          ← الداشبورد + الفلاتر + Excel
+│
+└── client/                   ← الفرونت إند (React)
+    ├── index.html            ← الخطوط (Aref Ruqaa / Amiri / Italiana / Cormorant)
+    └── src/
+        ├── App.jsx           ← الصفحات والروابط
+        ├── api.js            ← الاتصال بالسيرفر + تنسيق الأسعار
+        ├── i18n/
+        │   └── translations.js  ← كل نصوص الموقع عربي وإنجليزي ✏️
+        ├── context/          ← الحقيبة (السلة) + إعدادات المحل
+        ├── components/       ← Intro (المقدمة) / Navbar / ProductCard / Bottle ...
+        │   └── payment/      ← فورم الفيزا
+        ├── pages/            ← Home / Checkout / Success
+        │   └── admin/        ← Login / Dashboard
+        └── styles/
+            ├── main.css      ← ألوان وشكل الموقع 🎨
+            └── admin.css     ← شكل الداشبورد
+```
+
+---
+
+## 🚀 التشغيل لأول مرة
+
+المطلوب: **Node.js 18+** و **MySQL** (مثلاً XAMPP).
+
+### 1) قاعدة البيانات
+- شغّل MySQL من XAMPP.
+- افتح http://localhost/phpmyadmin ← **Import** ← اختار ملف `database/schema.sql` ← **Go**.
+  (أو من الـ terminal: `mysql -u root -p < database/schema.sql`)
+
+### 2) الإعدادات
+انسخ ملف `server/.env.example` وسمّيه `server/.env`، وعدّل فيه:
+- بيانات MySQL (`DB_USER` و `DB_PASSWORD`)
+- إيميل وباسورد الداشبورد (`ADMIN_EMAIL` و `ADMIN_PASSWORD`)
+- `JWT_SECRET` اكتب أي كلام طويل عشوائي
+
+### 3) تسطيب وتشغيل
+من فولدر المشروع الرئيسي:
+
+```bash
+npm run setup
+```
+
+```bash
+npm run dev
+```
+
+- الموقع: http://localhost:3000
+- الداشبورد: http://localhost:3000/admin  (بالإيميل والباسورد اللي في `.env`)
+
+> المقدمة المتحركة بتظهر مرة واحدة في كل زيارة. عشان تشوفها تاني افتح الموقع في تاب جديد.
+
+---
+
+## 💳 الدفع
+
+العميل بيشوف بس فورم **فيزا / ماستركارد** باسم موقعك — مفيش اسم بوابة دفع ظاهر.
+
+| الوضع | الإعداد في `.env` | الوصف |
+|---|---|---|
+| تجريبي | `PAYMENT_MODE=demo` | للتجربة، مفيش فلوس بتتخصم. اكتب أي رقم كارت 16 رقم (مثلاً `4242 4242 4242 4242`). |
+| حقيقي | `PAYMENT_MODE=stripe` | دفع حقيقي. حط مفاتيح Stripe في `STRIPE_SECRET_KEY` و `STRIPE_PUBLISHABLE_KEY`. |
+
+**مع Stripe:** خانات رقم الكارت والتاريخ والـ CVC بتكون خانات آمنة من Stripe بس متظبطة بنفس شكل وخط موقعك،
+فالعميل مش بيحس إنه خرج من الموقع. رقم الكارت **مش بيعدّي على السيرفر بتاعك خالص** — وده مهم جداً للأمان (قانون PCI)،
+وبيوفر عليك مسؤولية حماية بيانات الكروت.
+
+للتجربة على Stripe بمفاتيح `sk_test_` / `pk_test_` استخدم الكارت `4242 4242 4242 4242` بأي تاريخ مستقبلي وأي CVC.
+
+> ⚠️ **ملاحظة مهمة:** Stripe مش بيفتح حسابات لشركات مسجلة في مصر. لو شغلك من مصر، بوابة **Paymob** هي الأنسب.
+> كل كود البوابة في ملف واحد بس: `server/services/payment.js` (دالتين: `createPayment` و `checkPayment`)،
+> فلو حبيت تغيّر لـ Paymob بتعدّل الملف ده + فورم الكارت في `client/src/components/payment/`.
+
+---
+
+## ✏️ تعديلات سريعة
+
+| عايز تغيّر | فين |
+|---|---|
+| النصوص (عربي/إنجليزي) | `client/src/i18n/translations.js` |
+| الألوان | أول الملف `client/src/styles/main.css` (`--gold`, `--oud`, `--ivory` ...) |
+| اسم البراند في المقدمة | `client/src/components/Intro.jsx` |
+| رقم التليفون والإيميل | `client/src/components/Footer.jsx` |
+| العملة | `CURRENCY` في `server/.env` |
+| المنتجات | جدول `products` من phpMyAdmin |
+
+**صور المنتجات:** لو مفيش صورة، الموقع بيرسم زجاجة بلون المنتج (عمود `color`).
+لو عندك صورة حطها في `client/public/images/` واكتب في عمود `image_url` مثلاً `/images/oud.png`.
+
+**مسح الطلبات التجريبية** قبل ما تفتح المحل (من phpMyAdmin ← SQL):
+```sql
+DELETE FROM orders;
+```
+
+---
+
+## 🌍 الرفع على سيرفر (Production)
+
+```bash
+npm run build
+```
+
+```bash
+npm start
+```
+
+السيرفر بيشغّل الموقع والـ API مع بعض على البورت اللي في `PORT` (افتراضي 5000).
+
+قبل الرفع: غيّر `ADMIN_PASSWORD` و `JWT_SECRET`، وخلي `PAYMENT_MODE=stripe`.

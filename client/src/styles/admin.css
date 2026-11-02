@@ -1,0 +1,82 @@
+/* =========================================================
+   TUANA — dashboard styles (uses the colors from main.css)
+   ========================================================= */
+.admin { min-height: 100vh; background: var(--sand); font-size: 16px; }
+
+.admin-top {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.9rem 4vw; background: var(--white); border-bottom: 1px solid var(--sand-dark);
+}
+.admin-top .logo { flex-direction: row; gap: 0.8rem; align-items: baseline; }
+.admin-top-actions { display: flex; gap: 0.6rem; align-items: center; }
+
+.admin-body { padding: 1.6rem 4vw 3rem; display: flex; flex-direction: column; gap: 1.4rem; }
+
+/* Filters */
+.filters {
+  display: flex; flex-wrap: wrap; gap: 0.8rem; align-items: flex-end;
+  background: var(--white); border: 1px solid var(--sand-dark); border-radius: 16px; padding: 1rem 1.2rem;
+}
+.filters label { display: flex; flex-direction: column; font-size: 0.85rem; color: var(--muted); gap: 0.2rem; }
+.filters .input { padding: 0.5em 0.7em; font-size: 0.95rem; }
+.filters .search { flex: 1; min-width: 180px; }
+.presets { display: flex; gap: 0.3rem; background: var(--sand); border-radius: 999px; padding: 4px; }
+.presets button { border: none; background: transparent; padding: 0.4em 0.9em; border-radius: 999px; color: var(--oud); font-size: 0.9rem; }
+.presets button:hover { background: var(--white); }
+
+/* Stat cards */
+.stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.stat { background: var(--white); border: 1px solid var(--sand-dark); border-radius: 16px; padding: 1.2rem 1.4rem; }
+.stat span { color: var(--muted); font-size: 0.9rem; }
+.stat strong { display: block; font-size: 1.8rem; color: var(--oud); font-family: 'Cormorant Garamond', serif; margin-top: 0.2rem; }
+.stat.main { background: linear-gradient(135deg, var(--oud), #6B4226); }
+.stat.main span { color: var(--gold-light); }
+.stat.main strong { color: var(--ivory); }
+
+.admin .panel h3 { font-family: inherit; font-size: 1.15rem; }
+.admin .panel h3 small { color: var(--muted); font-weight: normal; }
+.muted { color: var(--muted); }
+.center { text-align: center; padding: 1.5rem; }
+
+/* Bar chart */
+.chart { display: flex; align-items: flex-end; gap: 6px; height: 220px; padding-top: 1.5rem; direction: ltr; overflow-x: auto; }
+.bar-col { flex: 1; min-width: 34px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+.bar { width: 70%; max-width: 40px; min-height: 4px; border-radius: 8px 8px 2px 2px; background: linear-gradient(180deg, var(--gold-light), var(--gold)); transition: 0.3s; }
+.bar-col:hover .bar { background: var(--oud); }
+.bar-value { font-size: 0.65rem; color: var(--muted); opacity: 0; white-space: nowrap; }
+.bar-col:hover .bar-value { opacity: 1; }
+.bar-label { font-size: 0.75rem; color: var(--muted); margin-top: 4px; }
+
+/* Table */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+th { text-align: start; color: var(--muted); font-weight: normal; padding: 0.6rem; border-bottom: 1px solid var(--sand-dark); white-space: nowrap; }
+td { padding: 0.8rem 0.6rem; border-bottom: 1px solid var(--sand); vertical-align: top; }
+td small { display: block; color: var(--muted); }
+tr:hover td { background: var(--ivory); }
+.nowrap { white-space: nowrap; }
+.items { color: var(--muted); max-width: 280px; }
+
+.badge { padding: 0.2em 0.8em; border-radius: 999px; font-size: 0.85rem; white-space: nowrap; }
+.badge.paid { background: #E3F1E6; color: #2F6F4E; }
+.badge.pending { background: #FBF0D9; color: #9A6B12; }
+.badge.failed { background: #F8E3DC; color: #9C3A24; }
+
+/* Login */
+.login-page { min-height: 100vh; display: grid; place-items: center; background: var(--sand); padding: 1rem; }
+.login-page::before { content: ''; position: fixed; inset: 0; background-image: var(--pattern); opacity: 0.4; }
+.login-box {
+  position: relative; width: min(400px, 100%); background: var(--white); border: 1px solid var(--sand-dark);
+  border-radius: 22px; padding: 2.2rem; display: flex; flex-direction: column; gap: 1rem; box-shadow: var(--shadow);
+}
+.login-box h2 { text-align: center; color: var(--oud); font-size: 1.5rem; }
+.login-box label { display: flex; flex-direction: column; gap: 0.3rem; color: var(--muted); font-size: 0.95rem; }
+.login-lang { position: absolute; top: 1rem; inset-inline-end: 1rem; width: 36px; height: 36px; }
+
+@media (max-width: 900px) {
+  .stat-cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 520px) {
+  .stat strong { font-size: 1.4rem; }
+  .filters label, .filters .search, .excel-btn { flex: 1 1 100%; }
+}
