@@ -8,6 +8,6 @@ export default defineConfig(({ mode }) => ({
   server: {
     port: 3000,
     // every request to /api goes to the Node server
-    proxy: { '/api': 'http://localhost:5000' },
+    proxy: { '/api': 'http://localhost:5000', '/uploads': 'http://localhost:5000' },
   },
 }));

@@ -7,7 +7,10 @@ const fs = require('fs');
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); // big enough for product photos
+
+// product photos uploaded from the dashboard
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ----- Public settings the website needs -----
 app.get('/api/config', (req, res) => {
@@ -24,6 +27,7 @@ app.use('/api/products', require('./routes/products'));
 app.use('/api/categories', require('./routes/categories'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/delivery-statuses', require('./routes/deliveryStatuses'));
+app.use('/api/uploads', require('./routes/uploads'));
 app.use('/api/orders', require('./routes/orders'));
 app.use('/api/admin', require('./routes/admin'));
 

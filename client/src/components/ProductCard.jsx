@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Bottle from './Bottle';
+import ProductImage from './ProductImage';
 import { useLang } from '../i18n/LanguageContext';
 import { useCart } from '../context/CartContext';
 import { money } from '../api';
@@ -18,9 +18,7 @@ export default function ProductCard({ product, currency, categoryName }) {
   return (
     <div className="product-card">
       <div className="product-image">
-        {product.image_url
-          ? <img src={product.image_url} alt={product.name_en} />
-          : <Bottle color={product.color} size={170} />}
+        <ProductImage product={product} size={170} />
       </div>
       <span className="product-cat">{categoryName} · {product.size}</span>
       <h3>{lang === 'ar' ? product.name_ar : product.name_en}</h3>

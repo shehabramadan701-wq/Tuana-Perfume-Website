@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import CartDrawer from '../components/CartDrawer';
 import ProductCard from '../components/ProductCard';
 import Bottle from '../components/Bottle';
+import HeroBottle from '../components/HeroBottle';
 import Ornament from '../components/Ornament';
 import Footer from '../components/Footer';
 import PalettePicker from '../components/PalettePicker';
@@ -60,7 +61,7 @@ export default function Home() {
         <div className="hero-visual">
           <div className="arch">
             <div className="arch-inner">
-              <div className="float"><Bottle color="var(--hero-bottle)" size={300} /></div>
+              <div className="float"><HeroBottle size={300} /></div>
             </div>
           </div>
           <div className="hero-badge">

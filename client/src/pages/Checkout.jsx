@@ -5,7 +5,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import StripeCard from '../components/payment/StripeCard';
 import DemoCard from '../components/payment/DemoCard';
-import Bottle from '../components/Bottle';
+import ProductImage from '../components/ProductImage';
 import Ornament from '../components/Ornament';
 import { useLang } from '../i18n/LanguageContext';
 import { useCart } from '../context/CartContext';
@@ -114,7 +114,7 @@ export default function Checkout() {
           <h3>{t('co.summary')}</h3>
           {items.map((i) => (
             <div className="summary-item" key={i.id}>
-              <div className="drawer-thumb"><Bottle color={i.color} size={56} /></div>
+              <div className="drawer-thumb"><ProductImage product={i} size={56} /></div>
               <span>{lang === 'ar' ? i.name_ar : i.name_en} × {i.quantity}</span>
               <strong>{money(i.price * i.quantity, config.currency, lang)}</strong>
             </div>

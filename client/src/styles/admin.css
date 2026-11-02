@@ -230,7 +230,10 @@ tr:hover td { background: var(--d-gold-pale); }
 
 .product-form-grid { display: grid; grid-template-columns: 200px 1fr; gap: 1.5rem; }
 .form-preview { border-radius: 110px 110px 16px 16px; background: radial-gradient(circle at 50% 35%, #fff 30%, var(--d-gold-light)); border: 2px solid var(--d-gold-light); display: grid; place-items: center; min-height: 260px; overflow: hidden; }
-.form-preview img { width: 100%; height: 100%; object-fit: cover; }
+.form-preview { position: relative; flex-direction: column; gap: 0.6rem; }
+.form-preview img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.photo-buttons { position: absolute; bottom: 0.8rem; inset-inline: 0; display: flex; flex-direction: column; align-items: center; gap: 0.3rem; z-index: 2; }
+.upload-btn { cursor: pointer; }
 .form-fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.9rem; }
 .form-fields label, .inline-form label { display: flex; flex-direction: column; gap: 0.25rem; font-size: 0.88rem; color: var(--d-gold-dark); }
 .form-fields .wide { grid-column: 1 / -1; }
@@ -294,3 +297,50 @@ textarea.input { resize: vertical; font-family: inherit; }
   .form-fields { grid-template-columns: 1fr; }
   .page-title { font-size: 1.6rem; }
 }
+
+/* =========================================================
+   Royal Burgundy dashboard (when the site palette is 'royal')
+   The gold dashboard above stays for the other palettes.
+   ========================================================= */
+[data-palette='royal'] {
+  --d-sidebar: linear-gradient(175deg, #3F0C19 0%, #5E1526 45%, #7A1F35 100%);
+  --d-ink: #5E1526;
+  --d-border: #E8CFBD;
+  --d-gold-pale: #FBEFE6;
+}
+[data-palette='royal'] .admin-shell {
+  background:
+    radial-gradient(circle at 85% 0%, rgba(122, 31, 53, 0.10), transparent 40%),
+    radial-gradient(circle at 10% 100%, rgba(212, 170, 90, 0.20), transparent 45%),
+    #FBF1EA;
+}
+[data-palette='royal'] .sidebar { border-inline-end: 2px solid #B8893B; }
+[data-palette='royal'] .sidebar::before { opacity: 0.22; filter: none; }
+[data-palette='royal'] .side-logo { border-bottom-color: rgba(212, 170, 90, 0.4); }
+[data-palette='royal'] .side-logo .logo-en { color: #F6E7BC; }
+[data-palette='royal'] .side-user { background: rgba(212, 170, 90, 0.12); border-color: rgba(212, 170, 90, 0.4); }
+[data-palette='royal'] .avatar { background: var(--d-shine); color: #fff; border-color: #F1DDA6; }
+[data-palette='royal'] .side-nav a { color: #F3E3D3; }
+[data-palette='royal'] .side-nav a:hover { background: rgba(212, 170, 90, 0.15); }
+[data-palette='royal'] .side-nav a.active { background: var(--d-shine); color: #3F0C19; }
+[data-palette='royal'] .side-nav a.active .side-icon { background: #5E1526; color: #F1DDA6; }
+[data-palette='royal'] .side-icon { background: rgba(212, 170, 90, 0.2); color: #F1DDA6; }
+[data-palette='royal'] .side-bottom { border-top-color: rgba(212, 170, 90, 0.4); }
+[data-palette='royal'] .side-lang, [data-palette='royal'] .side-logout { border-color: #D4AA5A; color: #F1DDA6; }
+[data-palette='royal'] .side-lang:hover, [data-palette='royal'] .side-logout:hover { background: #D4AA5A; color: #3F0C19; }
+[data-palette='royal'] .side-user .role-badge.admin { background: var(--d-shine); color: #3F0C19; }
+
+[data-palette='royal'] .page-title { background: linear-gradient(90deg, #5E1526, #8C2A40, #B8893B); -webkit-background-clip: text; background-clip: text; }
+[data-palette='royal'] .admin-shell .panel h3 { color: var(--d-ink); }
+[data-palette='royal'] th { background: linear-gradient(180deg, #7A1F35, #5E1526); color: #F6E7BC; text-shadow: none; }
+[data-palette='royal'] tr:hover td { background: #FBEFE6; }
+[data-palette='royal'] .stat.main { border-color: #B8893B; box-shadow: 0 16px 30px -18px rgba(94, 21, 38, 0.8); }
+[data-palette='royal'] .stat.main span { color: #EBD0C3; }
+[data-palette='royal'] .stat.main strong { color: #F6E7BC; }
+[data-palette='royal'] .stat strong { color: var(--d-ink); }
+[data-palette='royal'] .stat.main strong { color: #F6E7BC; }
+[data-palette='royal'] .bar-col:hover .bar { background: linear-gradient(180deg, #A33A55, #5E1526); filter: none; }
+[data-palette='royal'] .filters label, [data-palette='royal'] .form-fields label, [data-palette='royal'] .inline-form label { color: var(--d-ink); }
+[data-palette='royal'] .cat-card strong { color: var(--d-ink); }
+[data-palette='royal'] .menu-btn { background: var(--d-sidebar); color: #F1DDA6; }
+[data-palette='royal'] .login-box h2, [data-palette='royal'] .login-box label { color: var(--d-ink); }

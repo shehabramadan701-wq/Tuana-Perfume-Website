@@ -1,6 +1,7 @@
 // ===== Products page: add / edit / delete perfumes =====
 import { useEffect, useState } from 'react';
-import Bottle from '../../components/Bottle';
+import ProductImage from '../../components/ProductImage';
+import { uploadImage } from '../../imageUpload';
 import { useLang } from '../../i18n/LanguageContext';
 import useConfig from '../../context/useConfig';
 import { api, money } from '../../api';
@@ -20,6 +21,7 @@ export default function Products() {
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('');
   const [error, setError] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   async function load() {
     setProducts(await api('/products'));
@@ -33,6 +35,21 @@ export default function Products() {
   };
 
   const change = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+
+  // choose a photo from the computer -> upload it -> put its link in the form
+  async function choosePhoto(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploading(true);
+    setError('');
+    try {
+      setForm({ ...form, image_url: await uploadImage(file) });
+    } catch (err) {
+      setError(err.message);
+    }
+    setUploading(false);
+    e.target.value = '';
+  }
 
   async function save(e) {
     e.preventDefault();
@@ -77,7 +94,16 @@ export default function Products() {
           {error && <div className="alert">{error}</div>}
           <div className="product-form-grid">
             <div className="form-preview">
-              {form.image_url ? <img src={form.image_url} alt="" /> : <Bottle color={form.color} size={170} />}
+              <ProductImage product={form} size={170} />
+              <div className="photo-buttons">
+                <label className="btn btn-small upload-btn">
+                  {uploading ? '…' : t('pr.upload')}
+                  <input type="file" accept="image/png,image/jpeg,image/webp" onChange={choosePhoto} hidden />
+                </label>
+                {form.image_url && (
+                  <button type="button" className="link-btn danger" onClick={() => setForm({ ...form, image_url: '' })}>{t('pr.removePhoto')}</button>
+                )}
+              </div>
             </div>
             <div className="form-fields">
               <label>{t('pr.nameAr')}<input className="input" name="name_ar" value={form.name_ar} onChange={change} required /></label>
@@ -92,7 +118,7 @@ export default function Products() {
               <label>{t('pr.color')}<input className="input color-input" type="color" name="color" value={form.color} onChange={change} /></label>
               <label className="wide">{t('pr.descAr')}<textarea className="input" name="description_ar" value={form.description_ar} onChange={change} rows="2" /></label>
               <label className="wide">{t('pr.descEn')}<textarea className="input" name="description_en" value={form.description_en} onChange={change} rows="2" dir="ltr" /></label>
-              <label className="wide">{t('pr.image')}<input className="input" name="image_url" value={form.image_url || ''} onChange={change} dir="ltr" placeholder="https://… or /images/oud.png" /></label>
+              <label className="wide">{t('pr.image')}<input className="input" name="image_url" value={(form.image_url || '').startsWith('data:') ? '✓' : form.image_url || ''} onChange={change} dir="ltr" placeholder="https://… or /images/oud.png" /></label>
             </div>
           </div>
           <div className="form-buttons">
@@ -128,7 +154,7 @@ export default function Products() {
                   <td>
                     <div className="product-cell">
                       <div className="mini-bottle">
-                        {p.image_url ? <img src={p.image_url} alt="" /> : <Bottle color={p.color} size={50} />}
+                        <ProductImage product={p} size={50} />
                       </div>
                       <div>
                         <strong>{lang === 'ar' ? p.name_ar : p.name_en}</strong>

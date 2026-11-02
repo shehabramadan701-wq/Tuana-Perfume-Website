@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import Bottle from './Bottle';
+import ProductImage from './ProductImage';
 import { useLang } from '../i18n/LanguageContext';
 import { useCart } from '../context/CartContext';
 import { money } from '../api';
@@ -23,7 +23,7 @@ export default function CartDrawer({ currency }) {
         <div className="drawer-items">
           {items.map((item) => (
             <div className="drawer-item" key={item.id}>
-              <div className="drawer-thumb"><Bottle color={item.color} size={64} /></div>
+              <div className="drawer-thumb"><ProductImage product={item} size={64} /></div>
               <div className="drawer-info">
                 <strong>{lang === 'ar' ? item.name_ar : item.name_en}</strong>
                 <span>{money(item.price, currency, lang)}</span>

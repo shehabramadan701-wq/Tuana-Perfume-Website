@@ -5,3 +5,5 @@ server/.env
 *.log
 server.log
 client/dist-demo/
+server/uploads/*
+!server/uploads/.gitkeep

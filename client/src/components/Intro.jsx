@@ -1,7 +1,7 @@
 // Opening animation: a perfume bottle falls from the sky, lands with a golden
 // ripple, golden mist rises and the brand name appears. Click to skip.
 import { useEffect, useState } from 'react';
-import Bottle from './Bottle';
+import HeroBottle from './HeroBottle';
 
 export default function Intro({ onDone }) {
   const [leaving, setLeaving] = useState(false);
@@ -30,7 +30,7 @@ export default function Intro({ onDone }) {
         <div className="intro-ring ring2" />
 
         <div className="intro-bottle">
-          <Bottle color="var(--hero-bottle)" size={190} />
+          <HeroBottle size={190} />
         </div>
         <div className="intro-shadow" />
       </div>
