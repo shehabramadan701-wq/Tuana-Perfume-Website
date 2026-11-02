@@ -3,7 +3,7 @@
 // The colors themselves are in styles/palettes.css
 import { IS_DEMO } from './api';
 
-export const DEFAULT_PALETTE = 'ivory';
+export const DEFAULT_PALETTE = 'burgundy';
 
 export const palettes = [
   { id: 'ivory',    ar: 'عاجي وذهبي',      en: 'Ivory & Gold',     swatch: ['#FFFFFF', '#D4AA5A'] },
@@ -19,12 +19,15 @@ export const SHOW_PICKER = IS_DEMO || import.meta.env.DEV;
 
 export function startPalette() {
   if (SHOW_PICKER) {
-    try { return localStorage.getItem('tuana_palette') || DEFAULT_PALETTE; } catch {}
+    try { return localStorage.getItem('tuana_palette_choice') || DEFAULT_PALETTE; } catch {}
   }
   return DEFAULT_PALETTE;
 }
 
-export function applyPalette(id) {
+// remember = true only when the visitor picks a color from the picker
+export function applyPalette(id, remember = false) {
   document.documentElement.dataset.palette = id;
-  try { localStorage.setItem('tuana_palette', id); } catch {}
+  if (remember) {
+    try { localStorage.setItem('tuana_palette_choice', id); } catch {}
+  }
 }

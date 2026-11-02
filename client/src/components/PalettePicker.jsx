@@ -11,7 +11,7 @@ export default function PalettePicker() {
   if (!SHOW_PICKER) return null;
 
   function choose(id) {
-    applyPalette(id);
+    applyPalette(id, true);
     setCurrent(id);
   }
 
