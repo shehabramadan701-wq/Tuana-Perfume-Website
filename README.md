@@ -42,7 +42,21 @@ Tuana-Perfume-Website/
 
 ---
 
-## 🚀 التشغيل لأول مرة
+## ☁️ تشغيل الموقع من GitHub مباشرة (Codespaces) — من غير ما تسطب حاجة
+
+1. افتح اللينك ده:
+   https://codespaces.new/shehabramadan701-wq/Tuana-Perfume-Website/tree/claude/compassionate-fermi-sip98n
+2. اضغط **Create codespace**.
+3. استنى 3-5 دقايق أول مرة (بيسطب MySQL و Node وكل حاجة لوحده).
+4. الموقع بيفتح لوحده — ولو مفتحش: تبويب **PORTS** تحت ← port **5000** ← اضغط على أيقونة الكرة 🌐.
+   - الداشبورد: نفس اللينك + `/admin`  (الإيميل `admin@tuana.com` والباسورد `change-me-123`)
+   - عشان تبعت اللينك لحد تاني: كليك يمين على 5000 ← **Port Visibility** ← **Public**.
+
+> الـ Codespace بيقفل لوحده لو مفيش استخدام (حوالي 30 دقيقة). لما تفتحه تاني من github.com/codespaces بيرجع يشتغل.
+
+---
+
+## 🚀 التشغيل لأول مرة على جهازك
 
 المطلوب: **Node.js 18+** و **MySQL** (مثلاً XAMPP).
 
